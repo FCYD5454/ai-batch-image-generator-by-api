@@ -23,6 +23,12 @@ class UserModel:
         Args:
             db_path: 資料庫路徑
         """
+        # 確保數據目錄存在
+        import os
+        db_dir = os.path.dirname(db_path)
+        if db_dir and not os.path.exists(db_dir):
+            os.makedirs(db_dir, exist_ok=True)
+        
         self.db_path = db_path
         self.init_tables()
     
