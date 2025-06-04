@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量圖片生成器 - Multi-AI Image Generator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/api-key-manager.css">
+    <link rel="stylesheet" href="css/ai-assistant-v27.css">
+    <link rel="stylesheet" href="css/advanced-image-processor.css">
+    <link rel="stylesheet" href="css/local-ai-manager.css">
+</head>
+<body>
+    <!-- 主題和語言切換按鈕 -->
+    <div class="top-controls">
+        <!-- 語言切換器 -->
+        <div class="language-toggle" id="languageToggle">
+            <span class="language-icon">🌍</span>
+            <span id="languageText" data-i18n="language.current">繁體中文</span>
+            <div class="language-dropdown" id="languageDropdown">
+                <div class="language-option" data-language="zh-TW" onclick="i18n.changeLanguage('zh-TW')">
+                    <span class="language-flag">🇹🇼</span>
+                    <span class="language-name" data-i18n="language.zhTW">繁體中文</span>
+                </div>
+                <div class="language-option" data-language="zh-CN" onclick="i18n.changeLanguage('zh-CN')">
+                    <span class="language-flag">🇨🇳</span>
+                    <span class="language-name" data-i18n="language.zhCN">简体中文</span>
+                </div>
+                <div class="language-option" data-language="en" onclick="i18n.changeLanguage('en')">
+                    <span class="language-flag">🇺🇸</span>
+                    <span class="language-name" data-i18n="language.en">English</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主題切換按鈕 -->
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-icon" id="themeIcon">🌙</span>
+            <span id="themeText" data-i18n="theme.dark">深色模式</span>
+        </button>
+    </div>
+
+    <!-- 導航標籤 -->
+    <nav class="tab-navigation">
+        <button class="tab-btn active" onclick="switchTab('generator')" data-i18n="nav.generator">圖片生成</button>
+        <button class="tab-btn" onclick="switchTab('gallery')" data-i18n="nav.gallery">圖片畫廊</button>
+        <button class="tab-btn" onclick="switchTab('history')" data-i18n="nav.history">生成歷史</button>
+        <button class="tab-btn" onclick="switchTab('statistics')" data-i18n="nav.statistics">統計分析</button>
+    </nav>
+    <div class="container">
+        <header>
+            <h1 data-i18n="app.title">🎨 批量圖片生成器</h1>
+            <p data-i18n="app.subtitle">支持多種 AI 圖片生成服務：Gemini、OpenAI、Stability AI 或自定義 API</p>
+            <div class="api-info" data-i18n="app.api.info">
+                💡 所有 API 配置都可以在下方設置中完成，無需環境變量
+            </div>
+        </header>
+
+        <!-- 圖片生成標籤頁 -->
+        <div id="generatorTab" class="tab-content active">
+            <div class="main-content">
+            <!-- 提示詞輸入區域 -->
+            <div class="input-section">
+                <h2 data-i18n="generator.prompts.label">📝 輸入提示詞</h2>
+                <div class="prompts-container">
+                    <textarea id="prompts" data-i18n="generator.prompts.placeholder" rows="10"></textarea>
+                    <div class="prompt-count"><span data-i18n="generator.prompt.count">提示詞數量</span>: <span id="promptCount">0</span></div>
+                </div>
+            </div>
+
+            <!-- AI 智能助手面板 v2.7 -->
+            <div class="ai-assistant-v27" id="aiAssistantV27">
+                <!-- AI Assistant 內容將由 JavaScript 動態生成 -->
+            </div>
+
+            <!-- 提示詞增強面板 -->
+            <div class="prompt-enhancer-panel" id="promptEnhancerPanel">
+                <div class="enhancer-header" onclick="toggleEnhancerPanel()">
+                    <h3 data-i18n="prompt.enhancer.title">🔧 提示詞增強工具</h3>
+                    <button class="toggle-enhancer" id="toggleEnhancer" data-i18n="prompt.enhancer.toggle">收起</button>
+                </div>
+                
+                <div class="enhancer-content" id="enhancerContent">
+                    <!-- 提示詞分析區域 -->
+                    <div class="analysis-section">
+                        <h4 data-i18n="prompt.analysis.title">📊 提示詞分析</h4>
+                        <div class="analysis-results" id="analysisResults">
+                            <div class="analysis-item">
+                                <span data-i18n="prompt.analysis.length">長度:</span>
+                                <span id="promptLength">0</span>
+                            </div>
+                            <div class="analysis-item">
+                                <span data-i18n="prompt.analysis.complexity">複雜度:</span>
+                                <span id="promptComplexity">-</span>
+                            </div>
+                            <div class="analysis-item">
+                                <span data-i18n="prompt.analysis.quality">品質分數:</span>
+                                <span id="qualityScore">0/100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 語法檢查結果 -->
+                    <div class="syntax-section">
+                        <h4 data-i18n="prompt.syntax.title">✅ 語法檢查</h4>
+                        <div class="syntax-results" id="syntaxResults">
+                            <div class="syntax-status">等待分析...</div>
+                        </div>
+                    </div>
+
+                    <!-- AI 優化建議 -->
+                    <div class="optimization-section">
+                        <h4 data-i18n="prompt.optimization.title">🤖 AI 優化建議</h4>
+                        <div class="optimization-controls">
+                            <button class="enhance-btn" onclick="optimizePrompts()" data-i18n="prompt.optimize.btn">優化提示詞</button>
+                            <button class="enhance-btn" onclick="translatePrompts()" data-i18n="prompt.translate.btn">翻譯提示詞</button>
+                        </div>
+                        <div class="optimization-results" id="optimizationResults"></div>
+                    </div>
+
+                    <!-- 負面提示詞 -->
+                    <div class="negative-prompts-section">
+                        <h4 data-i18n="prompt.negative.title">🚫 負面提示詞</h4>
+                        <textarea 
+                            id="negativePrompts" 
+                            placeholder="輸入您想要避免的元素..." 
+                            data-i18n="prompt.negative.placeholder"
+                            rows="3"></textarea>
+                        <div class="negative-suggestions">
+                            <strong data-i18n="prompt.negative.suggestions">常用建議:</strong>
+                            <div class="suggestion-tags" id="negativeSuggestions"></div>
+                        </div>
+                    </div>
+
+                    <!-- 提示詞模板庫 -->
+                    <div class="templates-section">
+                        <h4 data-i18n="prompt.templates.title">📚 提示詞模板庫</h4>
+                        <div class="template-controls">
+                            <select id="templateCategory" data-i18n="prompt.templates.select">
+                                <option value="" data-i18n="prompt.templates.select">選擇分類...</option>
+                                <option value="portrait" data-i18n="template.portrait">人像攝影</option>
+                                <option value="landscape" data-i18n="template.landscape">風景畫面</option>
+                                <option value="abstract" data-i18n="template.abstract">抽象藝術</option>
+                                <option value="fantasy" data-i18n="template.fantasy">奇幻風格</option>
+                                <option value="anime" data-i18n="template.anime">動漫風格</option>
+                                <option value="realistic" data-i18n="template.realistic">寫實風格</option>
+                            </select>
+                            <button class="enhance-btn" onclick="saveAsTemplate()" data-i18n="prompt.templates.save">保存模板</button>
+                        </div>
+                        <div class="template-suggestions" id="templateSuggestions"></div>
+                    </div>
+
+                    <!-- 高級設置 -->
+                    <div class="advanced-settings">
+                        <h4 data-i18n="prompt.advanced.title">⚙️ 高級設置</h4>
+                        <div class="setting-row">
+                            <label>
+                                <input type="checkbox" id="autoOptimize">
+                                <span data-i18n="prompt.auto.optimize">自動優化</span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <label data-i18n="prompt.optimization.level">優化程度:</label>
+                            <select id="optimizationLevel">
+                                <option value="light" data-i18n="optimization.light">輕度</option>
+                                <option value="moderate" data-i18n="optimization.moderate" selected>中度</option>
+                                <option value="aggressive" data-i18n="optimization.aggressive">激進</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <label data-i18n="prompt.target.language">目標語言:</label>
+                            <select id="targetLanguage">
+                                <option value="zh-TW">繁體中文</option>
+                                <option value="zh-CN">简体中文</option>
+                                <option value="en" selected>English</option>
+                                <option value="ja" data-i18n="language.ja">日本語</option>
+                                <option value="ko" data-i18n="language.ko">한국어</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 生成設置 -->
+            <div class="settings-section">
+                <h2 data-i18n="generator.settings">⚙️ 生成設置</h2>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label for="apiProvider" data-i18n="generator.apiProvider">API 提供商:</label>
+                        <select id="apiProvider">
+                            <option value="gemini" selected data-i18n="api.gemini">Google Gemini</option>
+                            <option value="openai" data-i18n="api.openai">OpenAI DALL-E</option>
+                            <option value="stability" data-i18n="api.stability">Stability AI</option>
+                            <option value="adobe_firefly" data-i18n="api.adobe_firefly">Adobe Firefly ✨</option>
+                            <option value="leonardo_ai" data-i18n="api.leonardo_ai">Leonardo AI ✨</option>
+                            <option value="custom" data-i18n="api.custom">自定義 API</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="imageSize" data-i18n="generator.imageSize">圖片尺寸:</label>
+                        <select id="imageSize">
+                            <option value="512x512" data-i18n="size.512x512">512 x 512</option>
+                            <option value="1024x1024" selected data-i18n="size.1024x1024">1024 x 1024</option>
+                            <option value="1024x768" data-i18n="size.1024x768">1024 x 768</option>
+                            <option value="768x1024" data-i18n="size.768x1024">768 x 1024</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="imageCount" data-i18n="generator.imageCount">每個提示詞生成數量:</label>
+                        <input type="number" id="imageCount" min="1" max="5" value="1">
+                    </div>
+                    <div class="setting-item" id="modelSelectionSection">
+                        <label for="modelSelect" data-i18n="generator.model">模型選擇:</label>
+                        <select id="modelSelect">
+                            <option value="" data-i18n="model.default">預設模型</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- API 金鑰設置 -->
+                <div id="apiKeySettings" class="api-key-section">
+                    <h3>🔑 API 金鑰設置</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item" id="geminiKeySection">
+                            <label for="geminiApiKey">Gemini API 金鑰:</label>
+                            <input type="password" id="geminiApiKey" placeholder="您的 Gemini API 金鑰">
+                        </div>
+                        <div class="setting-item" id="openaiKeySection" style="display: none;">
+                            <label for="openaiApiKey">OpenAI API 金鑰:</label>
+                            <input type="password" id="openaiApiKey" placeholder="您的 OpenAI API 金鑰">
+                        </div>
+                        <div class="setting-item" id="stabilityKeySection" style="display: none;">
+                            <label for="stabilityApiKey">Stability AI API 金鑰:</label>
+                            <input type="password" id="stabilityApiKey" placeholder="您的 Stability AI API 金鑰">
+                        </div>
+                        <div class="setting-item" id="adobeFireflyKeySection" style="display: none;">
+                            <label for="adobeFireflyApiKey">Adobe Firefly API 金鑰:</label>
+                            <input type="password" id="adobeFireflyApiKey" placeholder="您的 Adobe Firefly API 金鑰">
+                        </div>
+                        <div class="setting-item" id="leonardoAiKeySection" style="display: none;">
+                            <label for="leonardoAiApiKey">Leonardo AI API 金鑰:</label>
+                            <input type="password" id="leonardoAiApiKey" placeholder="您的 Leonardo AI API 金鑰">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 自定義 API 設置 -->
+                <div id="customApiSettings" class="custom-api-section" style="display: none;">
+                    <h3 data-i18n="api.custom.settings">🔧 自定義 API 設置</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="customApiUrl" data-i18n="api.custom.url">API 端點 URL:</label>
+                            <input type="url" id="customApiUrl" data-i18n="api.custom.url.placeholder" placeholder="https://api.example.com/generate">
+                        </div>
+                        <div class="setting-item">
+                            <label for="customApiKey" data-i18n="api.custom.key">API 金鑰:</label>
+                            <input type="password" id="customApiKey" data-i18n="api.custom.key.placeholder" placeholder="您的 API 金鑰">
+                        </div>
+                        <div class="setting-item">
+                            <label for="customModel" data-i18n="api.custom.model">模型名稱:</label>
+                            <input type="text" id="customModel" data-i18n="api.custom.model.placeholder" placeholder="模型名稱 (可選)">
+                        </div>
+                        <div class="setting-item">
+                            <label for="requestFormat" data-i18n="api.custom.format">請求格式:</label>
+                            <select id="requestFormat">
+                                <option value="json">JSON</option>
+                                <option value="form">Form Data</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label for="customHeaders" data-i18n="api.custom.headers">自定義請求頭 (JSON 格式):</label>
+                        <textarea id="customHeaders" rows="3" data-i18n="api.custom.headers.placeholder" placeholder='{"Content-Type": "application/json", "Authorization": "Bearer YOUR_TOKEN"}'></textarea>
+                    </div>
+                    <div class="setting-item">
+                        <label for="requestTemplate" data-i18n="api.custom.template">請求模板 (JSON 格式):</label>
+                        <textarea id="requestTemplate" rows="5" data-i18n="api.custom.template.placeholder" placeholder='{"prompt": "{PROMPT}", "size": "{SIZE}", "n": {COUNT}}'></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 控制按鈕 -->
+            <div class="controls-section">
+                <button id="generateBtn" class="generate-btn">
+                    <span class="btn-text" data-i18n="generator.generate">🚀 開始生成</span>
+                    <span class="loading-spinner" style="display: none;" data-i18n="generator.generating">⏳ 生成中...</span>
+                </button>
+                <button id="clearBtn" class="clear-btn" data-i18n="generator.clear">🗑️ 清除全部</button>
+            </div>
+
+            <!-- 進度顯示 -->
+            <div class="progress-section" style="display: none;">
+                <h3 data-i18n="progress.title">📊 生成進度</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progressText" data-i18n="progress.preparing">準備中...</span>
+                </div>
+            </div>
+
+            <!-- 結果展示 -->
+            <div class="results-section">
+                <h2 data-i18n="results.title">🖼️ 生成結果</h2>
+                <div id="resultsContainer" class="results-grid">
+                    <!-- 圖片結果會動態插入這裡 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- 圖片畫廊標籤頁 -->
+        <div id="galleryTab" class="tab-content">
+            <div class="gallery-header">
+                <h2 data-i18n="gallery.title">🖼️ 圖片畫廊</h2>
+                <div class="gallery-stats" id="galleryStats" data-i18n="msg.loading">
+                    載入中...
+                </div>
+            </div>
+
+            <!-- 搜尋和篩選 -->
+            <div class="gallery-filters">
+                <div class="filter-group">
+                    <label for="gallerySearch" data-i18n="gallery.search">🔍 搜尋提示詞:</label>
+                    <input type="text" id="gallerySearch" data-i18n="gallery.search.placeholder" placeholder="輸入關鍵字搜尋...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="providerFilter" data-i18n="gallery.filter.provider">API 提供商:</label>
+                    <select id="providerFilter">
+                        <option value="" data-i18n="filter.all">全部</option>
+                        <option value="gemini" data-i18n="api.gemini">Google Gemini</option>
+                        <option value="openai" data-i18n="api.openai">OpenAI DALL-E</option>
+                        <option value="stability" data-i18n="api.stability">Stability AI</option>
+                        <option value="adobe_firefly" data-i18n="api.adobe_firefly">Adobe Firefly ✨</option>
+                        <option value="leonardo_ai" data-i18n="api.leonardo_ai">Leonardo AI ✨</option>
+                        <option value="custom" data-i18n="api.custom">自定義 API</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="favoriteFilter" data-i18n="gallery.filter.favorite">收藏狀態:</label>
+                    <select id="favoriteFilter">
+                        <option value="" data-i18n="filter.all">全部</option>
+                        <option value="true" data-i18n="filter.favorited">已收藏</option>
+                        <option value="false" data-i18n="filter.not.favorited">未收藏</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sortBy" data-i18n="gallery.filter.sort">排序方式:</label>
+                    <select id="sortBy">
+                        <option value="created_at" data-i18n="sort.date">創建時間</option>
+                        <option value="rating" data-i18n="sort.rating">評分</option>
+                        <option value="filename" data-i18n="sort.filename">文件名</option>
+                        <option value="api_provider" data-i18n="sort.provider">API 提供商</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 批量操作 -->
+            <div class="batch-actions" id="batchActions" style="display: none;">
+                <div class="batch-info">
+                    <span data-i18n="gallery.batch.select">已選擇</span> <span id="selectedCount">0</span> <span data-i18n="gallery.images">張圖片</span>
+                </div>
+                <div class="batch-buttons">
+                    <button id="selectAllImages" class="btn-secondary" data-i18n="btn.select.all">全選/取消全選</button>
+                    <button id="downloadSelected" class="btn-primary" data-i18n="gallery.batch.download">批量下載</button>
+                    <button id="deleteSelected" class="btn-danger" data-i18n="gallery.batch.delete">批量刪除</button>
+                </div>
+            </div>
+
+            <!-- 圖片網格 -->
+            <div class="gallery-container">
+                <div id="imageGalleryContainer" class="image-grid">
+                    <!-- 圖片會動態載入到這裡 -->
+                </div>
+            </div>
+
+            <!-- 分頁導航 -->
+            <div id="galleryPagination" class="pagination-container">
+                <!-- 分頁控制會動態載入到這裡 -->
+            </div>
+        </div>
+
+        <!-- 生成歷史標籤頁 -->
+        <div id="historyTab" class="tab-content">
+            <div class="history-header">
+                <h2 data-i18n="history.title">📜 生成歷史</h2>
+                <div class="history-actions">
+                    <button id="exportHistory" class="btn-secondary" data-i18n="history.export">匯出歷史</button>
+                    <button id="refreshHistory" class="btn-primary" data-i18n="history.refresh">重新整理</button>
+                </div>
+            </div>
+
+            <!-- 歷史記錄列表 -->
+            <div class="history-container">
+                <div id="historyList" class="history-list">
+                    <!-- 歷史記錄會動態載入到這裡 -->
+                </div>
+            </div>
+
+            <!-- 歷史分頁 -->
+            <div id="historyPagination" class="pagination-container">
+                <!-- 分頁控制會動態載入到這裡 -->
+            </div>
+        </div>
+
+        <!-- 統計分析標籤頁 -->
+        <div id="statisticsTab" class="tab-content">
+            <div class="statistics-header">
+                <h2 data-i18n="stats.title">📊 統計分析</h2>
+                <div class="stats-refresh">
+                    <button id="refreshStats" class="btn-primary" data-i18n="stats.refresh">重新整理</button>
+                </div>
+            </div>
+
+            <div class="statistics-container">
+                <!-- 基本統計 -->
+                <div class="stats-section">
+                    <h3 data-i18n="stats.overview">📈 基本統計</h3>
+                    <div id="basicStats" class="stats-grid">
+                        <!-- 基本統計會動態載入到這裡 -->
+                    </div>
+                </div>
+
+                <!-- 按提供商統計 -->
+                <div class="stats-section">
+                    <h3 data-i18n="stats.provider.usage">🔧 按 API 提供商統計</h3>
+                    <div id="providerStats" class="provider-stats">
+                        <!-- 提供商統計會動態載入到這裡 -->
+                    </div>
+                </div>
+
+                <!-- 最近7天統計 -->
+                <div class="stats-section">
+                    <h3 data-i18n="stats.daily.activity">📅 最近7天生成統計</h3>
+                    <div id="dailyStats" class="daily-stats">
+                        <!-- 每日統計會動態載入到這裡 -->
+                    </div>
+                </div>
+
+                <!-- 成功率統計 -->
+                <div class="stats-section">
+                    <h3 data-i18n="stats.success.analysis">✅ 成功率分析</h3>
+                    <div id="successStats" class="success-stats">
+                        <!-- 成功率統計會動態載入到這裡 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 認證修復系統優先載入 -->
+    <script src="js/auth-fix.js"></script>
+    
+    <!-- i18n 系統需要最先載入 -->
+    <script src="js/i18n.js"></script>
+    <script src="js/prompt-enhancer.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/image-gallery.js"></script>
+    <script src="js/history-manager.js"></script>
+    <script src="js/statistics-manager.js"></script>
+            <script src="js/image-processor.js"></script>
+        <script src="js/image-editor.js"></script>
+        <script src="js/ai-assistant.js"></script>
+    <script src="js/user-management.js"></script>
+    <script src="js/api-key-manager.js"></script>
+    <script src="js/ai-assistant-v27.js"></script>
+    <script src="js/advanced-image-processor.js"></script>
+    <script src="js/performance-optimizer.js"></script>
+    <script src="js/system-integration-tester.js"></script>
+    <script src="js/ux-enhancement.js"></script>
+    <script src="js/analytics-dashboard.js"></script>
+    <script src="js/local-ai-manager.js"></script>
+</body>
+</html> 

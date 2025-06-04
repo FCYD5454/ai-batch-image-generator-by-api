@@ -1,0 +1,706 @@
+/**
+ * API 金鑰管理器樣式
+ * v2.6 新功能 - 現代化 API 金鑰管理界面
+ */
+
+/* API 金鑰管理器主容器 */
+.api-key-manager {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+    box-shadow: var(--shadow-medium);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.api-key-manager:hover {
+    box-shadow: var(--shadow-large);
+    transform: translateY(-2px);
+}
+
+/* 管理器頭部 */
+.manager-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.manager-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.status-summary {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 500;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.status-badge.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.status-badge.info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.status-badge.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.status-badge.secondary {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+/* 快速添加區域 */
+.quick-add-section {
+    margin-bottom: 32px;
+}
+
+.quick-add-section h4 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.platform-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.platform-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--primary-color), 
+        var(--secondary-color));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.platform-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+.platform-card:hover::before {
+    transform: scaleX(1);
+}
+
+.platform-icon {
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.platform-info h5 {
+    margin: 0 0 8px 0;
+    color: var(--text-primary);
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.platform-info p {
+    margin: 0 0 8px 0;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.platform-info small {
+    color: var(--text-tertiary);
+    font-size: 0.8em;
+}
+
+.add-key-btn {
+    width: 100%;
+    padding: 10px 16px;
+    margin-top: 12px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-key-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* API 金鑰列表區域 */
+.keys-list-section {
+    margin-bottom: 32px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-header h4 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.refresh-btn {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1em;
+}
+
+.refresh-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: rotate(180deg);
+}
+
+.keys-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+}
+
+.empty-state p {
+    margin: 8px 0;
+}
+
+.loading-placeholder {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* API 金鑰項目 */
+.api-key-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 20px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.api-key-item.active {
+    border-left: 4px solid var(--success-color);
+}
+
+.api-key-item.inactive {
+    border-left: 4px solid var(--error-color);
+    opacity: 0.7;
+}
+
+.api-key-item:hover {
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-1px);
+}
+
+.key-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.key-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.platform-badge {
+    padding: 4px 12px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 16px;
+    font-size: 0.85em;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.platform-badge.openai {
+    background: linear-gradient(135deg, #00d4aa, #00b894);
+}
+
+.platform-badge.gemini {
+    background: linear-gradient(135deg, #4285f4, #1a73e8);
+}
+
+.platform-badge.stability {
+    background: linear-gradient(135deg, #ff6b6b, #e63946);
+}
+
+.platform-badge.adobe {
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+}
+
+.platform-badge.leonardo {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.key-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.key-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.key-stats span {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+}
+
+.key-limits {
+    display: flex;
+    gap: 12px;
+}
+
+.key-limits span {
+    padding: 2px 8px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    font-size: 0.8em;
+    color: var(--text-tertiary);
+}
+
+.key-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.key-actions button {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1em;
+}
+
+.test-key-btn:hover {
+    background: var(--info-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.toggle-key-btn:hover {
+    background: var(--warning-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.delete-key-btn:hover {
+    background: var(--error-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* 使用統計區域 */
+.usage-stats-section h4 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.stats-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+.stats-value {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.stats-label {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+/* 添加金鑰模態框 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: var(--bg-primary);
+    border-radius: 16px;
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-large);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.close-modal-btn:hover {
+    background: var(--error-color);
+    color: white;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+/* 表單樣式 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-with-action {
+    position: relative;
+    display: flex;
+}
+
+.input-with-action input {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.toggle-visibility-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.toggle-visibility-btn:hover {
+    background: var(--bg-secondary);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-tertiary);
+    font-size: 0.85em;
+}
+
+.form-group small a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.form-group small a:hover {
+    text-decoration: underline;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.test-connection-btn, .save-key-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.test-connection-btn {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.test-connection-btn:hover {
+    background: var(--info-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.save-key-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+.save-key-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* 消息通知 */
+.message-notification {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 1100;
+    animation: slideInRight 0.3s ease;
+    box-shadow: var(--shadow-large);
+    min-width: 300px;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.message-notification.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.message-notification.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.message-notification.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.message-notification.info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .api-key-manager {
+        margin: 16px 0;
+        padding: 16px;
+    }
+    
+    .platform-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .api-key-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .key-actions {
+        align-self: stretch;
+        justify-content: center;
+    }
+    
+    .manager-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .message-notification {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+        min-width: auto;
+    }
+}
+
+/* 深色模式適配 */
+[data-theme="dark"] .api-key-manager {
+    border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .platform-card {
+    border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .api-key-item {
+    border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .modal-content {
+    background: var(--bg-primary-dark);
+}
+
+[data-theme="dark"] .form-group input {
+    background: var(--bg-secondary-dark);
+    border-color: var(--border-color-dark);
+    color: var(--text-primary-dark);
+} 
