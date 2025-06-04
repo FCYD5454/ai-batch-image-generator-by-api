@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 批量圖片生成器 - 現代化 UI 演示</title>
+    
+    <!-- 現代化設計系統樣式 -->
+    <link rel="stylesheet" href="css/design-system.css">
+    
+    <!-- Google Fonts - Inter 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 演示頁面特定樣式 */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+            color: white;
+            padding: var(--space-16) 0;
+            text-align: center;
+        }
+        
+        .feature-grid {
+            display: grid;
+            gap: var(--space-8);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            margin: var(--space-16) 0;
+        }
+        
+        .demo-section {
+            margin: var(--space-16) 0;
+        }
+        
+        .component-showcase {
+            padding: var(--space-8);
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            margin: var(--space-8) 0;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            position: relative;
+        }
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 100%;
+            width: var(--space-8);
+            height: 2px;
+            background: var(--gray-300);
+            z-index: -1;
+        }
+        
+        .step.completed::after {
+            background: var(--primary-500);
+        }
+        
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background: var(--gray-300);
+            color: white;
+            font-weight: 600;
+            font-size: var(--text-sm);
+        }
+        
+        .step.completed .step-number {
+            background: var(--primary-500);
+        }
+        
+        .step-label {
+            font-size: var(--text-xs);
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin: var(--space-6) 0;
+        }
+        
+        .image-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition-base);
+        }
+        
+        .image-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+        
+        .image-placeholder {
+            height: 150px;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: var(--space-6);
+        }
+        
+        .stat-number {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-2);
+        }
+        
+        .stat-label {
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部導航 -->
+    <nav class="container" style="padding: var(--space-6) var(--space-4);">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"></div>
+                <h1 class="text-xl font-bold">AI 圖片生成器</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="btn btn-ghost">功能</button>
+                <button class="btn btn-ghost">定價</button>
+                <button class="btn btn-ghost">說明</button>
+                <button class="btn btn-primary">開始使用</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄區塊 -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="text-5xl font-bold mb-6">
+                AI 驅動的圖片生成新體驗
+            </h1>
+            <p class="text-xl mb-8 opacity-90">
+                整合 5 大 AI 平台，支援批量處理，讓創意無限延伸
+            </p>
+            <div class="flex justify-center gap-4">
+                <button class="btn btn-secondary btn-lg">觀看演示</button>
+                <button class="btn btn-primary btn-lg">立即體驗</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 統計數據 -->
+    <section class="container demo-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">15,000+</div>
+                <div class="stat-label">代碼行數</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">AI 平台整合</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">35+</div>
+                <div class="stat-label">API 端點</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">A+</div>
+                <div class="stat-label">代碼品質評分</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能展示 -->
+    <section class="container demo-section">
+        <h2 class="text-3xl font-bold text-center mb-12">現代化組件展示</h2>
+        
+        <!-- 按鈕組件展示 -->
+        <div class="component-showcase">
+            <h3 class="text-xl font-semibold mb-6">按鈕組件系統</h3>
+            <div class="flex flex-wrap items-center gap-4 mb-4">
+                <button class="btn btn-primary">主要按鈕</button>
+                <button class="btn btn-secondary">次要按鈕</button>
+                <button class="btn btn-ghost">透明按鈕</button>
+                <button class="btn btn-success">成功</button>
+                <button class="btn btn-warning">警告</button>
+                <button class="btn btn-error">錯誤</button>
+            </div>
+            <div class="flex flex-wrap items-center gap-4">
+                <button class="btn btn-primary btn-sm">小尺寸</button>
+                <button class="btn btn-primary">預設尺寸</button>
+                <button class="btn btn-primary btn-lg">大尺寸</button>
+                <button class="btn btn-primary btn-xl">超大尺寸</button>
+            </div>
+        </div>
+
+        <!-- 表單組件展示 -->
+        <div class="component-showcase">
+            <h3 class="text-xl font-semibold mb-6">表單組件系統</h3>
+            <div class="grid grid-md-2 gap-6">
+                <div class="form-group">
+                    <label class="form-label">圖片提示詞</label>
+                    <input type="text" class="form-input" placeholder="描述您想要生成的圖片...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">圖片尺寸</label>
+                    <select class="form-select">
+                        <option>1024x1024</option>
+                        <option>1280x720</option>
+                        <option>512x512</option>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label class="form-label">詳細描述</label>
+                    <textarea class="form-textarea" placeholder="請提供更詳細的圖片描述..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步驟指示器 -->
+        <div class="component-showcase">
+            <h3 class="text-xl font-semibold mb-6">生成流程指示器</h3>
+            <div class="step-indicator">
+                <div class="step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">輸入提示詞</div>
+                </div>
+                <div class="step completed">
+                    <div class="step-number">2</div>
+                    <div class="step-label">選擇風格</div>
+                </div>
+                <div class="step completed">
+                    <div class="step-number">3</div>
+                    <div class="step-label">設定參數</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-label">生成圖片</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-label">查看結果</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 進度條展示 -->
+        <div class="component-showcase">
+            <h3 class="text-xl font-semibold mb-6">進度指示器</h3>
+            <div class="mb-4">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-medium">圖片生成進度</span>
+                    <span class="text-sm text-gray-600">75%</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar animated" style="width: 75%"></div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-medium">批量處理進度</span>
+                    <span class="text-sm text-gray-600">45%</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 45%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 載入動畫展示 -->
+        <div class="component-showcase">
+            <h3 class="text-xl font-semibold mb-6">載入動畫系統</h3>
+            <div class="grid grid-md-3 gap-6">
+                <div>
+                    <h4 class="font-medium mb-3">文字骨架屏</h4>
+                    <div class="skeleton skeleton-text lg"></div>
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-text sm" style="width: 60%"></div>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-3">圖片骨架屏</h4>
+                    <div class="skeleton skeleton-image"></div>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-3">頭像骨架屏</h4>
+                    <div class="flex items-center gap-3">
+                        <div class="skeleton skeleton-avatar"></div>
+                        <div style="flex: 1;">
+                            <div class="skeleton skeleton-text" style="width: 80%"></div>
+                            <div class="skeleton skeleton-text sm" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 卡片組件展示 -->
+        <div class="component-showcase">
+            <h3 class="text-xl font-semibold mb-6">卡片組件系統</h3>
+            <div class="grid grid-md-3 gap-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="font-semibold">AI 平台整合</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-gray-600">支援 OpenAI、Stability AI、Google Gemini 等主流平台</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary btn-sm">了解更多</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="font-semibold">批量處理</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-gray-600">一次處理多個提示詞，大幅提升工作效率</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-secondary btn-sm">立即體驗</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="font-semibold">智能優化</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-gray-600">AI 驅動的提示詞優化和圖片品質提升</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-success btn-sm">探索功能</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 圖片畫廊展示 -->
+        <div class="component-showcase">
+            <h3 class="text-xl font-semibold mb-6">圖片畫廊展示</h3>
+            <div class="image-gallery">
+                <div class="image-card">
+                    <div class="image-placeholder">
+                        <span>AI 生成圖片 1</span>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-medium">科幻風景</p>
+                        <p class="text-xs text-gray-600">1024x1024</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-placeholder">
+                        <span>AI 生成圖片 2</span>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-medium">人物肖像</p>
+                        <p class="text-xs text-gray-600">512x512</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-placeholder">
+                        <span>AI 生成圖片 3</span>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-medium">抽象藝術</p>
+                        <p class="text-xs text-gray-600">1280x720</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-placeholder">
+                        <span>AI 生成圖片 4</span>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-medium">動物世界</p>
+                        <p class="text-xs text-gray-600">1024x1024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部按鈕區域 -->
+    <section class="container demo-section text-center">
+        <h2 class="text-2xl font-bold mb-6">準備好開始您的 AI 創作之旅了嗎？</h2>
+        <div class="flex justify-center gap-4">
+            <button class="btn btn-primary btn-lg" onclick="showNotification('🎉 歡迎使用 AI 圖片生成器！', 'success')">
+                立即開始
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="showNotification('📚 查看更多功能介紹', 'info')">
+                了解更多
+            </button>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="container" style="padding: var(--space-8) var(--space-4); text-align: center; color: var(--gray-600);">
+        <p>&copy; 2025 AI 批量圖片生成器. 現代化 UI/UX 演示版本.</p>
+    </footer>
+
+    <!-- 通知容器 -->
+    <div id="notifications-container"></div>
+
+    <script>
+        // 通知系統演示
+        function showNotification(message, type = 'info') {
+            const icons = {
+                success: '✅',
+                warning: '⚠️',
+                error: '❌',
+                info: 'ℹ️'
+            };
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-icon">${icons[type]}</div>
+                <div class="notification-content">
+                    <p class="notification-message">${message}</p>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            const container = document.getElementById('notifications-container') || document.body;
+            container.appendChild(notification);
+            
+            // 顯示動畫
+            requestAnimationFrame(() => {
+                notification.classList.add('show');
+            });
+            
+            // 自動移除
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // 演示按鈕互動
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎨 現代化 UI 系統已載入');
+            
+            // 為所有按鈕添加點擊反饋
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (!this.classList.contains('no-ripple')) {
+                        // 點擊波紋效果
+                        const ripple = document.createElement('span');
+                        const rect = this.getBoundingClientRect();
+                        const size = Math.max(rect.width, rect.height);
+                        const x = e.clientX - rect.left - size / 2;
+                        const y = e.clientY - rect.top - size / 2;
+                        
+                        ripple.style.cssText = `
+                            position: absolute;
+                            width: ${size}px;
+                            height: ${size}px;
+                            left: ${x}px;
+                            top: ${y}px;
+                            background: rgba(255, 255, 255, 0.3);
+                            border-radius: 50%;
+                            transform: scale(0);
+                            animation: ripple 0.6s linear;
+                            pointer-events: none;
+                        `;
+                        
+                        this.style.position = 'relative';
+                        this.style.overflow = 'hidden';
+                        this.appendChild(ripple);
+                        
+                        setTimeout(() => ripple.remove(), 600);
+                    }
+                });
+            });
+        });
+
+        // 添加波紋動畫 CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html> 
