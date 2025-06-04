@@ -26,7 +26,7 @@ db_manager = DatabaseService()
 
 # 健康檢查端點
 @app.route('/health')
-def health_check():
+def main_health_check():
     """健康檢查端點，用於生產環境監控"""
     try:
         import datetime
@@ -67,11 +67,35 @@ def health_check():
         }), 500
 
 if __name__ == '__main__':
+    # 檢查端口是否可用，如果 5000 被佔用則使用 5001
+    import socket
+    
+    def is_port_available(port):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            result = sock.connect_ex(('127.0.0.1', port))
+            return result != 0
+    
+    # 嘗試多個端口
+    ports_to_try = [5000, 5001, 5002, 5003, 8000, 8080, 3000]
+    chosen_port = None
+    
+    for port in ports_to_try:
+        if is_port_available(port):
+            chosen_port = port
+            break
+    
+    if chosen_port is None:
+        chosen_port = 5004  # 備用端口
+    
     print("🚀 啟動批量圖片生成器...")
-    print("🌐 服務將運行在 http://localhost:5000")
+    print(f"🌐 服務將運行在 http://localhost:{chosen_port}")
     print("📁 項目採用優化的目錄結構")
     print(f"📂 項目根目錄: {project_root}")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    
+    if chosen_port != 5000:
+        print(f"💡 注意：端口 5000 被佔用，已自動切換到端口 {chosen_port}")
+    
+    app.run(host='0.0.0.0', port=chosen_port, debug=True)
 
 @app.route('/api/generate-image', methods=['POST'])
 def generate_image():

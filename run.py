@@ -31,7 +31,7 @@ def main():
     
     print(f"📂 項目根目錄: {project_root}")
     print(f"🔧 後端目錄: {backend_path}")
-    print("🌐 服務將運行在 http://localhost:5000")
+    print("🌐 服務將自動選擇可用端口 (5000, 5001, 5002...)")
     
     try:
         # 切換到 backend 目錄並運行 main.py
