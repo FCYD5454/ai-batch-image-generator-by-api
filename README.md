@@ -1,306 +1,129 @@
-# 🎨 AI 批量圖片生成器 v2.1
+# 🎨 AI Batch Image Generator v2.8
 
 [![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/chunyfan4-c/ai-batch-image-generator-by-api.svg)](https://github.com/chunyfan4-c/ai-batch-image-generator-by-api/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/chunyfan4-c/ai-batch-image-generator-by-api.svg)](https://github.com/chunyfan4-c/ai-batch-image-generator-by-api/issues)
 
-一個功能強大的 AI 批量圖片生成工具，支援多種 AI 平台，提供完整的圖片管理和增強功能。
+🚀 **Professional AI-powered batch image generation platform** with multi-platform support, advanced post-processing capabilities, enterprise-grade user management, and local AI integration.
 
-## ✨ 主要功能
+## ✨ Key Features
 
-### 🎯 核心功能
-- ✅ **批量圖片生成**: 一次處理多個提示詞
-- ✅ **多 AI 平台支援**: Gemini、OpenAI DALL-E、Stability AI
-- ✅ **自定義 API**: 支援任何兼容的圖片生成 API
-- ✅ **實時進度追蹤**: 即時查看生成進度和狀態
+### 🎯 Core Capabilities
+- ✅ **Batch Image Generation**: Process multiple prompts simultaneously
+- ✅ **Multi-AI Platform Support**: Gemini, OpenAI DALL-E, Stability AI, Adobe Firefly, Leonardo AI
+- ✅ **Custom API Integration**: Support for any compatible image generation API
+- ✅ **Real-time Progress Tracking**: Live generation status and progress monitoring
+- ✅ **Local AI Integration**: Ollama support with 5+ model types (LLaMA, CodeLLaMA, LLaVA, Mistral)
 
-### 🔧 提示詞增強系統
-- 📊 **智能分析**: 實時分析提示詞長度、複雜度和品質分數
-- ✅ **語法檢查**: 自動檢測問題並提供改進建議
-- 🤖 **AI 優化**: 智能優化提示詞以獲得更好結果
-- 🌐 **自動翻譯**: 支援多語言翻譯（中文、英文、日文、韓文）
-- 🚫 **負面提示詞**: 完整的負面提示詞管理系統
-- 📚 **模板庫**: 內建六大分類專業模板
+### 🎨 Professional Image Post-Processing
+- 🔧 **Advanced Editing Tools**: Crop, resize, rotate, format conversion
+- 🎭 **Professional Filters**: Blur, sharpen, grayscale, sepia, vintage, enhance
+- 💧 **Watermark System**: Customizable text watermarks with position and opacity control
+- 📏 **Smart Upscaling**: 2x/4x upscaling with multiple algorithms (Lanczos, Bicubic, Bilinear)
+- 🔄 **Format Conversion**: PNG, JPG, WEBP with intelligent transparency handling
 
-### 🖼️ 圖片管理系統
-- 🎨 **智能畫廊**: 支援搜尋、篩選、分頁瀏覽
-- ⭐ **評分系統**: 1-5 星評分管理
-- ❤️ **收藏功能**: 收藏喜愛的圖片
-- 🏷️ **標籤管理**: 自定義圖片標籤
-- 📦 **批量下載**: 一鍵下載 ZIP 壓縮包
+### 🚀 Enterprise Features
+- 👥 **User Authentication System**: Complete registration, login, and session management
+- 🔐 **API Key Management**: Encrypted storage with Fernet encryption for all platforms
+- 🤖 **AI Assistant Integration**: GPT-4 powered prompt optimization and image analysis
+- 📊 **Advanced Analytics**: Usage statistics, cost analysis, and success rate monitoring
+- 🏢 **Team Collaboration**: Multi-user support with role-based permissions
 
-### 📊 數據管理
-- 📜 **完整歷史**: SQLite 資料庫記錄所有生成歷史
-- 📈 **統計分析**: 詳細的使用統計和成功率分析
-- 📤 **資料匯出**: JSON 格式匯出功能
-- 🔄 **歷史重新生成**: 從歷史記錄重新生成圖片
+## 🚀 Quick Start
 
-### 🌍 用戶體驗
-- 🌓 **深色模式**: 完美的深色主題支援
-- 🌐 **多語言**: 繁體中文、簡體中文、English
-- 📱 **響應式設計**: 支援各種螢幕尺寸
-- ⚡ **現代化界面**: 直觀易用的用戶界面
-
-## 🚀 快速開始
-
-### 1. 系統需求
-- Python 3.7 或更高版本
-- 網頁瀏覽器 (Chrome, Firefox, Safari 等)
-
-### 2. 一鍵啟動（Windows）
+### ⚡ One-Click Installation (Windows)
 ```bash
-# 雙擊運行
+# Clone the repository
+git clone https://github.com/chunyfan4-c/ai-batch-image-generator-by-api.git
+cd ai-batch-image-generator-by-api
+
+# Double-click to run (Windows)
 start.bat
 ```
 
-### 3. 手動啟動
+### 🐧 Manual Installation (All Platforms)
 ```bash
-# 1. 安裝依賴
-pip install flask flask-cors google-generativeai openai requests pillow
+# 1. Clone the repository
+git clone https://github.com/chunyfan4-c/ai-batch-image-generator-by-api.git
+cd ai-batch-image-generator-by-api
 
-# 2. 啟動應用
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the application
 python main.py
 
-# 3. 打開瀏覽器訪問
+# 4. Open your browser
 http://localhost:5000
 ```
 
-## 🔑 API 配置
+## 🔑 API Configuration
 
-### 支援的 AI 平台
+### Supported AI Platforms
 
-#### 1. Google Gemini
-- 訪問 [Google AI Studio](https://makersuite.google.com/app/apikey)
-- 創建 API 金鑰
-- 在網頁界面中輸入金鑰
+| Platform | API Documentation | Features |
+|----------|------------------|----------|
+| **Google Gemini** | [Get API Key](https://makersuite.google.com/app/apikey) | Text-to-image, Fast generation |
+| **OpenAI DALL-E** | [Get API Key](https://platform.openai.com/api-keys) | High-quality images, DALL-E 3 |
+| **Stability AI** | [Get API Key](https://beta.dreamstudio.ai/account) | Stable Diffusion, Multiple models |
+| **Adobe Firefly** | [Get API Key](https://developer.adobe.com/firefly-services/) | Professional quality, Commercial use |
+| **Leonardo AI** | [Get API Key](https://leonardo.ai/) | Game assets, Character design |
+| **Custom API** | Any compatible endpoint | Full customization support |
 
-#### 2. OpenAI DALL-E
-- 訪問 [OpenAI Platform](https://platform.openai.com/api-keys)
-- 創建 API 金鑰
-- 在網頁界面中輸入金鑰
-
-#### 3. Stability AI
-- 訪問 [Stability AI Platform](https://beta.dreamstudio.ai/account)
-- 獲取 API 金鑰
-- 在網頁界面中輸入金鑰
-
-#### 4. 自定義 API
-- 配置任何兼容的圖片生成 API
-- 支援 JSON 和 Form Data 格式
-- 可自定義請求頭和模板
-
-## 📖 使用指南
-
-### 基本使用流程
-
-1. **輸入提示詞**: 在文字框中輸入您想要的圖片描述，每行一個
-2. **使用增強工具**: 利用提示詞增強系統優化您的提示詞
-3. **選擇設置**: 
-   - 選擇 AI 平台
-   - 設定圖片尺寸
-   - 輸入 API 金鑰
-4. **開始生成**: 點擊生成按鈕並等待結果
-5. **管理圖片**: 在畫廊中查看、評分、收藏圖片
-
-### 提示詞增強技巧
-
-1. **使用分析功能**: 查看提示詞的複雜度和品質分數
-2. **應用 AI 優化**: 讓系統自動改進您的提示詞
-3. **添加負面提示詞**: 指定您不想要的元素
-4. **使用模板**: 從六大分類中選擇專業模板
-5. **多語言支援**: 自動翻譯提示詞到目標語言
-
-### 批量操作
-
-- **批量生成**: 一次處理多個提示詞
-- **批量下載**: 選擇多張圖片打包下載
-- **批量管理**: 統一設定評分和標籤
-
-## 🗂️ 項目結構
+## 🗂️ Project Architecture
 
 ```
-ImageGeneration_Script/
-├── backend/                 # 後端 API
-│   ├── api/                # API 端點
-│   │   └── image_management.py
-│   ├── services/           # 業務邏輯
-│   │   └── database.py
-│   └── app.py             # Flask 應用
-├── frontend/               # 前端介面
-│   ├── css/               # 樣式文件
-│   │   └── style.css
-│   ├── js/                # JavaScript 模組
-│   │   ├── script.js      # 主要邏輯
-│   │   ├── i18n.js        # 國際化
-│   │   ├── prompt-enhancer.js  # 提示詞增強
-│   │   ├── image-gallery.js    # 圖片畫廊
-│   │   ├── history-manager.js  # 歷史管理
-│   │   └── statistics-manager.js # 統計分析
-│   └── index.html         # 主頁面
-├── data/                  # 資料庫文件
-├── assets/images/         # 圖片存儲
-├── docs/                  # 文檔
-├── main.py               # 主程序
-├── start.bat             # 啟動腳本
-└── README.md             # 說明文檔
+ai-batch-image-generator-by-api/
+├── 📁 backend/                 # Backend API & Services
+│   ├── 📁 api/                # REST API endpoints (35+ endpoints)
+│   ├── 📁 services/           # Business logic & AI integrations
+│   └── 📁 models/             # Database models & schemas
+├── 📁 frontend/               # Frontend Web Application
+│   ├── 📁 css/               # Responsive styles with dark mode
+│   ├── 📁 js/                # 16+ JavaScript modules
+│   └── 📄 index.html         # Main application interface
+├── 📁 data/                   # SQLite database & user data
+├── 📁 assets/                 # Static assets & generated images
+├── 📁 docs/                   # Documentation & development guides
+└── 📄 main.py                # Main application entry point
 ```
 
-## 🔧 進階功能
+## 🤝 Contributing
 
-### 提示詞增強系統詳解
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-#### 分析功能
-- **長度分析**: 檢查提示詞是否過短或過長
-- **複雜度評估**: 評估技術詞彙和藝術風格的使用
-- **品質分數**: 基於多項指標的 0-100 分評分
+### 🐛 Bug Reports & 💡 Feature Requests
+- Use [GitHub Issues](https://github.com/chunyfan4-c/ai-batch-image-generator-by-api/issues)
+- Include detailed reproduction steps
+- Attach screenshots if applicable
 
-#### 優化建議
-- **自動改進**: 基於最佳實踐自動添加優化詞彙
-- **結構調整**: 改善提示詞的邏輯結構
-- **參數建議**: 推薦適合的技術參數
+## 📄 License
 
-#### 模板系統
-- **人像攝影**: 專業人像拍攝模板
-- **風景畫面**: 自然風景和城市景觀
-- **抽象藝術**: 現代藝術和抽象設計
-- **奇幻風格**: 魔法和奇幻主題
-- **動漫風格**: 日式動漫和漫畫風格
-- **寫實風格**: 超現實和寫實渲染
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-### 圖片管理進階
+## 🆘 Support & Community
 
-#### 智能篩選
-- **按 AI 平台篩選**: 快速找到特定平台生成的圖片
-- **按評分篩選**: 查看高品質圖片
-- **按收藏狀態**: 管理收藏的圖片
-- **關鍵字搜尋**: 在提示詞中搜尋特定內容
+### 📞 Get Help
+- 📚 **Documentation**: Complete guides in `/docs` folder
+- 🐛 **Issues**: [GitHub Issues](https://github.com/chunyfan4-c/ai-batch-image-generator-by-api/issues)
+- 📧 **Email**: Create an issue for direct support
 
-#### 批量操作
-- **批量評分**: 同時為多張圖片設定評分
-- **批量標籤**: 為相似圖片添加相同標籤
-- **批量下載**: 打包下載選中的圖片
-- **批量刪除**: 清理不需要的圖片
-
-## 📊 統計功能
-
-### 基本統計
-- 總圖片數量
-- 收藏圖片數量
-- 平均評分
-- 使用的 AI 平台數量
-
-### 詳細分析
-- **按平台統計**: 各 AI 平台的使用情況
-- **時間趨勢**: 最近 7 天的生成統計
-- **成功率分析**: 生成成功率和失敗分析
-- **品質分布**: 圖片評分的分布情況
-
-## 🌐 多語言支援
-
-### 支援語言
-- **繁體中文** (預設): 完整的繁體中文界面
-- **簡體中文**: 簡體中文本地化
-- **English**: 完整的英文界面
-
-### 語言功能
-- **動態切換**: 即時切換語言，無需重新載入
-- **自動檢測**: 根據瀏覽器語言自動選擇
-- **偏好記憶**: 記住用戶的語言選擇
-- **完整翻譯**: 300+ 翻譯項目全覆蓋
-
-## 🎨 深色模式
-
-### 主題功能
-- **一鍵切換**: 即時切換深色/淺色主題
-- **完美適配**: 所有組件都有深色模式版本
-- **護眼設計**: 降低眼部疲勞的配色方案
-- **偏好記憶**: 自動記住主題選擇
-
-## 🔧 自定義 API 配置
-
-### 靈活配置
-- **任意端點**: 支援任何 REST API 端點
-- **多種格式**: JSON 和 Form Data 格式
-- **自定義請求頭**: 完全可自定義的 HTTP 請求頭
-- **模板系統**: 使用變量模板定義請求格式
-
-### 常見 API 範例
-
-#### OpenAI DALL-E
-```json
-{
-  "model": "dall-e-3",
-  "prompt": "{PROMPT}",
-  "n": {COUNT},
-  "size": "{SIZE}"
-}
-```
-
-#### Stability AI
-```json
-{
-  "text_prompts": [{"text": "{PROMPT}"}],
-  "cfg_scale": 7,
-  "samples": {COUNT},
-  "width": 1024,
-  "height": 1024
-}
-```
-
-## 🚨 常見問題
-
-### Q: API 金鑰如何取得？
-A: 請訪問對應平台的官方網站申請 API 金鑰，並在網頁界面中輸入。
-
-### Q: 為什麼圖片生成失敗？
-A: 請檢查：
-- API 金鑰是否正確
-- 網路連接是否正常
-- 提示詞是否符合平台規範
-- API 額度是否充足
-
-### Q: 如何提高圖片品質？
-A: 建議：
-- 使用提示詞增強功能
-- 添加技術參數（如 "high quality", "detailed"）
-- 使用專業模板
-- 嘗試不同的 AI 平台
-
-### Q: 資料存儲在哪裡？
-A: 所有資料存儲在本地：
-- 圖片文件：`assets/images/` 目錄
-- 資料庫：`data/image_generator.db`
-- 設定：瀏覽器本地存儲
-
-## 🔮 未來計劃
-
-### v2.2 (2025年7月)
-- 🖼️ 圖片後處理功能（放大、修復、格式轉換）
-- 🤖 更多 AI 平台支援（Adobe Firefly、Leonardo AI）
-- ⚡ 批量操作優化
-
-### v2.3 (2025年8月)
-- 🧠 AI 助手整合（ChatGPT 提示詞助手）
-- 🔍 智能圖片分析和推薦
-- 🎯 個性化推薦系統
-
-### v3.0 (2025年11月)
-- 🎬 視頻生成支援
-- 🗿 3D 模型生成
-- 🌐 雲端同步功能
-
-## 📝 授權條款
-
-本項目使用 MIT 授權條款。詳見 [LICENSE](LICENSE) 文件。
-
-## 🤝 貢獻
-
-歡迎提交 Issue 和 Pull Request！
-
-## 📧 聯絡
-
-如有問題或建議，請提交 GitHub Issue。
+### 🌟 Show Your Support
+- ⭐ **Star the repository** if you found it helpful
+- 🍴 **Fork and contribute** to make it better
+- 🐛 **Report bugs** to help improve quality
 
 ---
 
-**享受 AI 創作的樂趣！** 🎨✨ 
+<div align="center">
+
+**Built with ❤️ by the AI Image Generation Community**
+
+[⭐ Star on GitHub](https://github.com/chunyfan4-c/ai-batch-image-generator-by-api) • 
+[📖 Documentation](docs/) • 
+[🐛 Report Bug](https://github.com/chunyfan4-c/ai-batch-image-generator-by-api/issues) • 
+[💡 Request Feature](https://github.com/chunyfan4-c/ai-batch-image-generator-by-api/issues)
+
+</div> 
