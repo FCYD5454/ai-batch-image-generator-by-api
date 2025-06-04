@@ -11,9 +11,6 @@ requests==2.31.0
 # Image Processing
 Pillow==10.1.0
 
-# Database
-sqlite3
-
 # Authentication & Security
 PyJWT==2.8.0
 bcrypt==4.1.2
@@ -29,17 +26,18 @@ python-dateutil==2.8.2
 # HTTP Client
 urllib3==2.1.0
 
-# File Handling
-pathlib
-
 # Environment Variables
 python-dotenv==1.0.0
 
 # Async Support
 aiohttp==3.9.1
-asyncio
 
 # Development Dependencies (Optional)
 # pytest==7.4.3
 # black==23.11.0
-# flake8==6.1.0 
+# flake8==6.1.0
+
+# Note: Removed built-in modules that don't need installation:
+# - sqlite3 (built-in)
+# - pathlib (built-in)  
+# - asyncio (built-in) 

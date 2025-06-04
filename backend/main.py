@@ -6,15 +6,23 @@
 import sys
 import os
 import time
+import logging
 from datetime import datetime
 from flask import request, jsonify
 
-# 添加後端路徑到 Python 路徑
-backend_path = os.path.join(os.path.dirname(__file__), 'backend')
-sys.path.insert(0, backend_path)
-
-# 導入Flask應用
+# 由於 main.py 現在位於 backend/ 目錄內，直接導入同目錄下的 app.py
 from app import app
+
+# 添加項目根目錄到 Python 路徑 (為了訪問其他資源)
+project_root = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
+
+# 導入數據庫管理器和日誌設置
+from services.database import DatabaseService
+logger = logging.getLogger(__name__)
+
+# 初始化數據庫服務
+db_manager = DatabaseService()
 
 # 健康檢查端點
 @app.route('/health')
@@ -23,15 +31,21 @@ def health_check():
     try:
         import datetime
         
-        # 檢查關鍵目錄是否存在
+        # 檢查關鍵目錄是否存在（相對於項目根目錄）
         required_dirs = ['assets/images', 'data', 'generated_images']
-        missing_dirs = [d for d in required_dirs if not os.path.exists(d)]
+        missing_dirs = []
+        
+        for d in required_dirs:
+            dir_path = os.path.join(project_root, d)
+            if not os.path.exists(dir_path):
+                missing_dirs.append(d)
         
         health_info = {
             'status': 'healthy',
             'timestamp': datetime.datetime.utcnow().isoformat(),
             'version': '3.0',
             'environment': os.environ.get('FLASK_ENV', 'development'),
+            'project_root': project_root,
             'directories': {
                 'missing': missing_dirs,
                 'all_present': len(missing_dirs) == 0
@@ -56,6 +70,7 @@ if __name__ == '__main__':
     print("🚀 啟動批量圖片生成器...")
     print("🌐 服務將運行在 http://localhost:5000")
     print("📁 項目採用優化的目錄結構")
+    print(f"📂 項目根目錄: {project_root}")
     app.run(host='0.0.0.0', port=5000, debug=True)
 
 @app.route('/api/generate-image', methods=['POST'])
