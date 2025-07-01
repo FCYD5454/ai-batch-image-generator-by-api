@@ -73,21 +73,58 @@ let progressSection;
 let progressFill;
 let progressText;
 
-// DOM 元素
-const promptsTextarea = document.getElementById('prompts');
-const promptCountSpan = document.getElementById('promptCount');
-const generateBtn = document.getElementById('generateBtn');
-const clearBtn = document.getElementById('clearBtn');
-const imageSizeSelect = document.getElementById('imageSize');
-const imageCountInput = document.getElementById('imageCount');
-const apiProviderSelect = document.getElementById('apiProvider');
-const customApiSettings = document.getElementById('customApiSettings');
-const customApiUrl = document.getElementById('customApiUrl');
-const customApiKey = document.getElementById('customApiKey');
-const customModel = document.getElementById('customModel');
-const requestFormat = document.getElementById('requestFormat');
-const customHeaders = document.getElementById('customHeaders');
-const requestTemplate = document.getElementById('requestTemplate');
+// DOM 元素 - 安全初始化
+const promptsTextarea = safeGetElement('prompts');
+const promptCountSpan = safeGetElement('promptCount');
+const generateBtn = safeGetElement('generateBtn');
+const clearBtn = safeGetElement('clearBtn');
+const imageSizeSelect = safeGetElement('imageSize');
+const imageCountInput = safeGetElement('imageCount');
+const apiProviderSelect = safeGetElement('apiProvider');
+const customApiSettings = safeGetElement('customApiSettings');
+const customApiUrl = safeGetElement('customApiUrl');
+const customApiKey = safeGetElement('customApiKey');
+const customModel = safeGetElement('customModel');
+const requestFormat = safeGetElement('requestFormat');
+const customHeaders = safeGetElement('customHeaders');
+const requestTemplate = safeGetElement('requestTemplate');
+
+// DOM 安全查詢函數
+function safeGetElement(id) {
+    try {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.warn(`⚠️ DOM元素未找到: ${id}`);
+        }
+        return element;
+    } catch (error) {
+        console.error(`❌ DOM查詢失敗: ${id}`, error);
+        return null;
+    }
+}
+
+// 檢查關鍵元素是否存在
+function checkCriticalElements() {
+    const criticalElements = {
+        'prompts': promptsTextarea,
+        'generateBtn': generateBtn,
+        'promptCount': promptCountSpan
+    };
+    
+    const missing = [];
+    Object.entries(criticalElements).forEach(([name, element]) => {
+        if (!element) {
+            missing.push(name);
+        }
+    });
+    
+    if (missing.length > 0) {
+        console.error('🚨 關鍵DOM元素缺失:', missing);
+        return false;
+    }
+    
+    return true;
+}
 
 // 模型配置映射
 const providerModels = {
@@ -132,51 +169,169 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 應用初始化
+// 應用初始化 - 安全版本
 function initializeApp() {
+    // 檢查關鍵DOM元素
+    if (!checkCriticalElements()) {
+        console.error('🚨 關鍵DOM元素缺失，應用初始化失敗');
+        showError('頁面載入不完整，請重新整理頁面');
+        return false;
+    }
+    
     setupEventListeners();
     updatePromptCount();
-    resultsContainer = document.getElementById('resultsContainer');
-    progressSection = document.querySelector('.progress-section');
-    progressFill = document.getElementById('progressFill');
-    progressText = document.getElementById('progressText');
+    
+    // 安全獲取進度相關元素
+    resultsContainer = safeGetElement('resultsContainer');
+    progressSection = safeQuerySelector('.progress-section');
+    progressFill = safeGetElement('progressFill');
+    progressText = safeGetElement('progressText');
+    
+    // 檢查進度相關元素
+    if (!resultsContainer || !progressSection) {
+        console.warn('⚠️ 進度顯示元素缺失，某些功能可能受影響');
+    }
     
     // 監聽語言變更事件
     document.addEventListener('languageChanged', function(event) {
         console.log('語言已變更為:', event.detail.language);
-        // 可以在這裡添加語言變更後的其他處理邏輯
         updateProgressText();
     });
+    
+    return true;
 }
 
-// 設置事件監聽器
-function setupEventListeners() {
-    promptsTextarea.addEventListener('input', updatePromptCount);
-    generateBtn.addEventListener('click', startGeneration);
-    clearBtn.addEventListener('click', clearAll);
-    apiProviderSelect.addEventListener('change', function() {
-        toggleCustomApiSettings();
-        updateModelSelector();
+// DOM安全查詢輔助函數
+function safeGetElement(id) {
+    try {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.warn(`⚠️ DOM元素未找到: ${id}`);
+        }
+        return element;
+    } catch (error) {
+        console.error(`❌ DOM查詢失敗: ${id}`, error);
+        return null;
+    }
+}
+
+function safeQuerySelector(selector) {
+    try {
+        const element = document.querySelector(selector);
+        if (!element) {
+            console.warn(`⚠️ 選擇器未找到元素: ${selector}`);
+        }
+        return element;
+    } catch (error) {
+        console.error(`❌ 選擇器查詢失敗: ${selector}`, error);
+        return null;
+    }
+}
+
+// 檢查關鍵元素是否存在
+function checkCriticalElements() {
+    const criticalElements = [
+        'prompts',
+        'generateBtn', 
+        'promptCount',
+        'apiProvider'
+    ];
+    
+    const missing = [];
+    const elements = {};
+    
+    criticalElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            elements[id] = element;
+        } else {
+            missing.push(id);
+        }
     });
     
-    // 初始化模型選擇器
-    updateModelSelector();
+    if (missing.length > 0) {
+        console.error('🚨 關鍵DOM元素缺失:', missing);
+        return false;
+    }
     
-    // 設置預設的請求模板
-    setDefaultRequestTemplates();
+    console.log('✅ 關鍵DOM元素檢查通過');
+    return true;
 }
 
-// 更新提示詞計數
+// 設置事件監聽器 - 安全版本
+function setupEventListeners() {
+    // 安全添加事件監聽器，檢查元素是否存在
+    if (promptsTextarea) {
+        promptsTextarea.addEventListener('input', updatePromptCount);
+    } else {
+        console.error('❌ promptsTextarea 元素不存在，無法設置input事件');
+    }
+    
+    if (generateBtn) {
+        generateBtn.addEventListener('click', startGeneration);
+    } else {
+        console.error('❌ generateBtn 元素不存在，無法設置click事件');
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearAll);
+    } else {
+        console.warn('⚠️ clearBtn 元素不存在，清除功能可能受影響');
+    }
+    
+    if (apiProviderSelect) {
+        apiProviderSelect.addEventListener('change', function() {
+            toggleCustomApiSettings();
+            updateModelSelector();
+        });
+    } else {
+        console.error('❌ apiProviderSelect 元素不存在，無法設置change事件');
+    }
+    
+    try {
+        // 初始化模型選擇器
+        updateModelSelector();
+        
+        // 設置預設的請求模板
+        setDefaultRequestTemplates();
+    } catch (error) {
+        console.error('❌ 初始化過程中發生錯誤:', error);
+    }
+}
+
+// 更新提示詞計數 - 安全版本
 function updatePromptCount() {
-    const prompts = getPrompts();
-    promptCountSpan.textContent = prompts.length;
+    try {
+        const prompts = getPrompts();
+        
+        // 安全檢查promptCountSpan是否存在
+        if (promptCountSpan) {
+            promptCountSpan.textContent = prompts.length;
+        } else {
+            console.warn('⚠️ promptCountSpan 元素不存在，無法更新計數');
+        }
+    } catch (error) {
+        console.error('❌ 更新提示詞計數時發生錯誤:', error);
+    }
 }
 
-// 獲取提示詞列表
+// 獲取提示詞列表 - 安全版本
 function getPrompts() {
-    const text = promptsTextarea.value.trim();
-    if (!text) return [];
-    return text.split('\n').filter(line => line.trim() !== '');
+    try {
+        // 安全檢查promptsTextarea是否存在
+        if (!promptsTextarea) {
+            console.warn('⚠️ promptsTextarea 元素不存在');
+            return [];
+        }
+        
+        const text = promptsTextarea.value.trim();
+        if (!text) return [];
+        
+        return text.split('\n').filter(line => line.trim() !== '');
+    } catch (error) {
+        console.error('❌ 獲取提示詞列表時發生錯誤:', error);
+        return [];
+    }
 }
 
 // 開始生成流程
@@ -360,122 +515,44 @@ async function generateSingleImage(prompt, imageSize, imageCount, resultItem) {
     }
 }
 
-// 使用內建 API 生成
+// 使用內建 API 生成 (已整合統一API管理器)
 async function generateWithBuiltInApi(prompt, imageSize, imageCount, apiProvider) {
-    // 獲取對應的 API 金鑰
-    let apiKey = '';
-    if (apiProvider === 'gemini') {
-        apiKey = document.getElementById('geminiApiKey').value.trim();
-    } else if (apiProvider === 'openai') {
-        apiKey = document.getElementById('openaiApiKey').value.trim();
-    } else if (apiProvider === 'stability') {
-        apiKey = document.getElementById('stabilityApiKey').value.trim();
-    } else if (apiProvider === 'adobe_firefly') {
-        apiKey = document.getElementById('adobeFireflyApiKey').value.trim();
-    } else if (apiProvider === 'leonardo_ai') {
-        apiKey = document.getElementById('leonardoAiApiKey').value.trim();
+    try {
+        // 使用統一API管理器生成圖片
+        const result = await window.unifiedAPI.generateImage(prompt, {
+            imageSize,
+            imageCount,
+            apiProvider,
+            model: getModelForProvider(apiProvider)
+        });
+        
+        return result;
+    } catch (error) {
+        console.error('圖片生成失敗:', error);
+        throw error;
     }
-    
-    if (!apiKey && apiProvider !== 'midjourney') {
-        throw new Error(`請輸入 ${getProviderName(apiProvider)} API 金鑰`);
-    }
-    
-    // 獲取負面提示詞
-    const negativePrompts = window.promptEnhancer ? window.promptEnhancer.getNegativePrompts() : '';
-    
-    const requestData = {
-        prompt: prompt,
-        negative_prompt: negativePrompts,
-        image_size: imageSize,
-        image_count: imageCount,
-        api_provider: apiProvider,
-        api_key: apiKey,
-        model: getModelForProvider(apiProvider)
-    };
-    
-    const response = await fetch('/api/generate-image', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData)
-    });
-    
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    return await response.json();
 }
 
-// 使用自定義 API 生成
+// 使用自定義 API 生成 (已整合統一API管理器)
 async function generateWithCustomApi(prompt, imageSize, imageCount) {
-    const apiUrl = customApiUrl.value.trim();
-    const apiKey = customApiKey.value.trim();
-    const model = customModel.value.trim();
-    const format = requestFormat.value;
-    
-    if (!apiUrl) {
-        throw new Error('請輸入 API 端點 URL');
+    try {
+        // 使用統一API管理器的自定義API方法
+        const result = await window.unifiedAPI.generateImageWithCustomAPI(prompt, {
+            apiUrl: customApiUrl.value.trim(),
+            apiKey: customApiKey.value.trim(),
+            model: customModel.value.trim(),
+            imageSize,
+            imageCount,
+            customHeaders: customHeaders.value.trim() ? JSON.parse(customHeaders.value.trim()) : {},
+            requestTemplate: requestTemplate.value.trim(),
+            format: requestFormat.value
+        });
+        
+        return result;
+    } catch (error) {
+        console.error('自定義API圖片生成失敗:', error);
+        throw error;
     }
-    
-    // 解析自定義請求頭
-    let headers = {
-        'Content-Type': 'application/json'
-    };
-    
-    if (customHeaders.value.trim()) {
-        try {
-            const customHeadersObj = JSON.parse(customHeaders.value);
-            headers = { ...headers, ...customHeadersObj };
-        } catch (e) {
-            throw new Error('自定義請求頭格式錯誤，請使用有效的 JSON 格式');
-        }
-    }
-    
-    // 如果有 API 金鑰，添加到請求頭
-    if (apiKey) {
-        headers['Authorization'] = `Bearer ${apiKey}`;
-    }
-    
-    // 構建請求體
-    let requestBody;
-    if (requestTemplate.value.trim()) {
-        try {
-            const template = requestTemplate.value;
-            requestBody = template
-                .replace(/{PROMPT}/g, prompt)
-                .replace(/{SIZE}/g, imageSize)
-                .replace(/{COUNT}/g, imageCount)
-                .replace(/{MODEL}/g, model || '');
-            
-            requestBody = JSON.parse(requestBody);
-        } catch (e) {
-            throw new Error('請求模板格式錯誤，請使用有效的 JSON 格式');
-        }
-    } else {
-        requestBody = {
-            prompt: prompt,
-            size: imageSize,
-            n: imageCount
-        };
-        if (model) requestBody.model = model;
-    }
-    
-    const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: headers,
-        body: format === 'json' ? JSON.stringify(requestBody) : new URLSearchParams(requestBody)
-    });
-    
-    if (!response.ok) {
-        throw new Error(`API 請求失敗: ${response.status} ${response.statusText}`);
-    }
-    
-    const result = await response.json();
-    
-    // 處理不同 API 提供商的響應格式
-    return parseCustomApiResponse(result);
 }
 
 // 創建結果項目

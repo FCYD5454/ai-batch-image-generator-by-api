@@ -511,11 +511,27 @@ class AnalyticsDashboard {
     }
     
     startAutoRefresh() {
-        // 每5分鐘自動刷新數據
-        this.updateInterval = setInterval(() => {
-            this.loadRealtimeMetrics();
-            this.loadSystemAlerts();
-        }, 5 * 60 * 1000);
+        // 使用資源管理器管理自動刷新定時器
+        if (window.resourceManager) {
+            this.updateInterval = window.resourceManager.registerManagedTimer(() => {
+                this.loadRealtimeMetrics();
+                this.loadSystemAlerts();
+            }, 5 * 60 * 1000, 'analytics-auto-refresh');
+            
+            // 註冊清理處理器
+            window.resourceManager.registerCleanupHandler(() => {
+                if (this.updateInterval) {
+                    clearInterval(this.updateInterval);
+                    this.updateInterval = null;
+                }
+            });
+        } else {
+            // 降級方案
+            this.updateInterval = setInterval(() => {
+                this.loadRealtimeMetrics();
+                this.loadSystemAlerts();
+            }, 5 * 60 * 1000);
+        }
     }
     
     async refreshData() {
@@ -576,9 +592,15 @@ class AnalyticsDashboard {
     }
     
     updateElement(id, value) {
-        const element = document.getElementById(id);
-        if (element) {
-            element.textContent = value;
+        try {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            } else {
+                console.warn(`⚠️ 無法找到元素: ${id}`);
+            }
+        } catch (error) {
+            console.error(`❌ 更新元素 ${id} 時發生錯誤:`, error);
         }
     }
     
@@ -607,6 +629,24 @@ class AnalyticsDashboard {
             today_generated: '2,847',
             success_rate: '94.2%'
         };
+    }
+
+    displayMockDashboardData() {
+        const mockData = this.getMockDashboardData();
+        this.data.dashboard = mockData;
+        this.updateDashboardUI();
+    }
+
+    displayMockSystemAlerts() {
+        const mockAlerts = this.getMockAlertsData();
+        this.data.alerts = mockAlerts;
+        this.updateAlertsUI();
+    }
+
+    displayMockSmartInsights() {
+        const mockInsights = this.getMockInsightsData();
+        this.data.insights = mockInsights;
+        this.updateInsightsUI();
     }
     
     getMockRealtimeData() {
@@ -946,7 +986,14 @@ class AnalyticsDashboard {
     destroy() {
         if (this.updateInterval) {
             clearInterval(this.updateInterval);
+            this.updateInterval = null;
         }
+        
+        // 註冊到資源管理器的組件清理
+        if (window.resourceManager) {
+            window.resourceManager.unregisterComponent('analytics-dashboard');
+        }
+        
         this.isInitialized = false;
     }
 }

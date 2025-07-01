@@ -1,0 +1,206 @@
+/**
+ * 淺色模式外觀修正
+ * 調整淺色模式下的文字顏色和背景色
+ */
+
+/* AI 智能助手 v2.7 區域背景設為白色 */
+[data-theme="light"] .ai-assistant-v27,
+body:not([data-theme="dark"]) .ai-assistant-v27 {
+    background-color: white !important;
+}
+
+[data-theme="light"] .ai-assistant-header,
+body:not([data-theme="dark"]) .ai-assistant-header {
+    background-color: white !important;
+}
+
+/* AI 智能助手 v2.7 標題文字改為黑色 */
+[data-theme="light"] .ai-assistant-header h3,
+body:not([data-theme="dark"]) .ai-assistant-header h3 {
+    color: black !important;
+}
+
+/* 狀態指示器中的文字改為黑色 */
+[data-theme="light"] .status-indicator,
+body:not([data-theme="dark"]) .status-indicator {
+    color: black !important;
+}
+
+/* 標籤按鈕中的文字改為黑色 */
+[data-theme="light"] .tab-button,
+body:not([data-theme="dark"]) .tab-button {
+    color: black !important;
+}
+
+/* 選項標籤文字改為黑色 */
+[data-theme="light"] .option-group label,
+body:not([data-theme="dark"]) .option-group label {
+    color: black !important;
+}
+
+/* 標籤按鈕內的具體文字改為黑色 */
+[data-theme="light"] .tab-button[data-tab="enhance"],
+[data-theme="light"] .tab-button[data-tab="batch"], 
+[data-theme="light"] .tab-button[data-tab="translate"],
+[data-theme="light"] .tab-button[data-tab="style"],
+[data-theme="light"] .tab-button[data-tab="analytics"],
+[data-theme="light"] .tab-button[data-tab="history"],
+body:not([data-theme="dark"]) .tab-button[data-tab="enhance"],
+body:not([data-theme="dark"]) .tab-button[data-tab="batch"],
+body:not([data-theme="dark"]) .tab-button[data-tab="translate"],
+body:not([data-theme="dark"]) .tab-button[data-tab="style"],
+body:not([data-theme="dark"]) .tab-button[data-tab="analytics"],
+body:not([data-theme="dark"]) .tab-button[data-tab="history"] {
+    color: black !important;
+}
+
+/* 狀態指示器內的具體文字改為黑色 */
+[data-theme="light"] #ai-config-status,
+[data-theme="light"] #ai-performance-indicator,
+body:not([data-theme="dark"]) #ai-config-status,
+body:not([data-theme="dark"]) #ai-performance-indicator {
+    color: black !important;
+}
+
+/* 選項標籤的具體文字改為黑色 */
+[data-theme="light"] label[for="style-select"],
+[data-theme="light"] label[for="complexity-select"], 
+[data-theme="light"] label[for="target-language-select"],
+body:not([data-theme="dark"]) label[for="style-select"],
+body:not([data-theme="dark"]) label[for="complexity-select"],
+body:not([data-theme="dark"]) label[for="target-language-select"] {
+    color: black !important;
+}
+
+/* Local AI 管理中心背景設為白色 */
+[data-theme="light"] .local-ai-manager,
+body:not([data-theme="dark"]) .local-ai-manager {
+    background-color: white !important;
+}
+
+[data-theme="light"] .local-ai-header,
+body:not([data-theme="dark"]) .local-ai-header {
+    background-color: white !important;
+}
+
+/* Local AI 管理中心相關文字改為黑色 */
+[data-theme="light"] .local-ai-header h3,
+[data-theme="light"] .local-ai-tabs .tab-button,
+body:not([data-theme="dark"]) .local-ai-header h3,
+body:not([data-theme="dark"]) .local-ai-tabs .tab-button {
+    color: black !important;
+}
+
+/* Local AI 標籤按鈕的具體文字改為黑色 */
+[data-theme="light"] .local-ai-tabs .tab-button[data-tab="models"],
+[data-theme="light"] .local-ai-tabs .tab-button[data-tab="generate"],
+[data-theme="light"] .local-ai-tabs .tab-button[data-tab="enhance"],
+[data-theme="light"] .local-ai-tabs .tab-button[data-tab="analyze"],
+[data-theme="light"] .local-ai-tabs .tab-button[data-tab="system"],
+body:not([data-theme="dark"]) .local-ai-tabs .tab-button[data-tab="models"],
+body:not([data-theme="dark"]) .local-ai-tabs .tab-button[data-tab="generate"],
+body:not([data-theme="dark"]) .local-ai-tabs .tab-button[data-tab="enhance"],
+body:not([data-theme="dark"]) .local-ai-tabs .tab-button[data-tab="analyze"],
+body:not([data-theme="dark"]) .local-ai-tabs .tab-button[data-tab="system"] {
+    color: black !important;
+}
+
+/* 強制覆蓋所有相關元素的文字顏色為黑色 */
+[data-theme="light"] .ai-assistant-v27 .ai-assistant-header *,
+[data-theme="light"] .ai-assistant-v27 .ai-assistant-tabs *,
+[data-theme="light"] .local-ai-manager .local-ai-header *,
+[data-theme="light"] .local-ai-manager .local-ai-tabs *,
+body:not([data-theme="dark"]) .ai-assistant-v27 .ai-assistant-header *,
+body:not([data-theme="dark"]) .ai-assistant-v27 .ai-assistant-tabs *,
+body:not([data-theme="dark"]) .local-ai-manager .local-ai-header *,
+body:not([data-theme="dark"]) .local-ai-manager .local-ai-tabs * {
+    color: black !important;
+}
+
+/* 確保標題和狀態文字為黑色 */
+[data-theme="light"] .ai-assistant-header h3,
+[data-theme="light"] .status-indicator,
+[data-theme="light"] .tab-button,
+[data-theme="light"] .local-ai-header h3,
+[data-theme="light"] .local-ai-tabs .tab-button,
+body:not([data-theme="dark"]) .ai-assistant-header h3,
+body:not([data-theme="dark"]) .status-indicator,
+body:not([data-theme="dark"]) .tab-button,
+body:not([data-theme="dark"]) .local-ai-header h3,
+body:not([data-theme="dark"]) .local-ai-tabs .tab-button {
+    color: black !important;
+}
+
+/* 額外確保標籤內容可讀性 */
+[data-theme="light"] .ai-assistant-v27,
+[data-theme="light"] .local-ai-manager,
+body:not([data-theme="dark"]) .ai-assistant-v27,
+body:not([data-theme="dark"]) .local-ai-manager {
+    color: black !important;
+    background-color: white !important;
+}
+
+/* === 新增：修正標籤背景色問題 === */
+
+/* 修正選中標籤的背景色 */
+[data-theme="light"] .tab-button.active,
+body:not([data-theme="dark"]) .tab-button.active {
+    background-color: #2563eb !important; /* 藍色背景 */
+    color: white !important; /* 白色文字 */
+    border: 1px solid #2563eb !important;
+}
+
+/* 修正非選中標籤的背景色 */
+[data-theme="light"] .tab-button:not(.active),
+body:not([data-theme="dark"]) .tab-button:not(.active) {
+    background-color: #f3f4f6 !important; /* 淺灰色背景 */
+    color: black !important; /* 黑色文字 */
+    border: 1px solid #d1d5db !important;
+}
+
+/* 標籤按鈕 hover 效果 */
+[data-theme="light"] .tab-button:not(.active):hover,
+body:not([data-theme="dark"]) .tab-button:not(.active):hover {
+    background-color: #e5e7eb !important; /* 稍深的灰色 */
+    color: black !important;
+    border: 1px solid #9ca3af !important;
+}
+
+/* 特別針對有問題的標籤 */
+[data-theme="light"] .tab-button[data-tab="batch"],
+[data-theme="light"] .tab-button[data-tab="analytics"], 
+[data-theme="light"] .tab-button[data-tab="history"],
+body:not([data-theme="dark"]) .tab-button[data-tab="batch"],
+body:not([data-theme="dark"]) .tab-button[data-tab="analytics"],
+body:not([data-theme="dark"]) .tab-button[data-tab="history"] {
+    background-color: #f3f4f6 !important;
+    color: black !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* 特別針對有問題的選中標籤 */
+[data-theme="light"] .tab-button[data-tab="batch"].active,
+[data-theme="light"] .tab-button[data-tab="analytics"].active, 
+[data-theme="light"] .tab-button[data-tab="history"].active,
+body:not([data-theme="dark"]) .tab-button[data-tab="batch"].active,
+body:not([data-theme="dark"]) .tab-button[data-tab="analytics"].active,
+body:not([data-theme="dark"]) .tab-button[data-tab="history"].active {
+    background-color: #2563eb !important;
+    color: white !important;
+    border: 1px solid #2563eb !important;
+}
+
+/* 確保標籤容器也有正確的背景 */
+[data-theme="light"] .ai-assistant-tabs,
+[data-theme="light"] .local-ai-tabs,
+body:not([data-theme="dark"]) .ai-assistant-tabs,
+body:not([data-theme="dark"]) .local-ai-tabs {
+    background-color: white !important;
+}
+
+/* 標籤內容區域背景 */
+[data-theme="light"] .tab-content,
+body:not([data-theme="dark"]) .tab-content {
+    background-color: white !important;
+    color: black !important;
+} 

@@ -1,0 +1,5 @@
+/* 按鈕間距修正 */
+.ai-assistant-v27 button {
+    margin: 8px 6px !important;
+    min-width: 100px !important;
+} 

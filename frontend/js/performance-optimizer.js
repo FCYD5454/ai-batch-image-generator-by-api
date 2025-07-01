@@ -285,42 +285,23 @@ class PerformanceOptimizer {
     }
     
     setupAPICache() {
-        const originalFetch = window.fetch;
-        
-        window.fetch = async (url, options = {}) => {
-            const cacheKey = this.generateCacheKey(url, options);
-            
-            // 檢查快取
-            if (this.shouldUseCache(options) && this.cache.has(cacheKey)) {
-                const cachedResponse = this.cache.get(cacheKey);
-                if (!this.isCacheExpired(cachedResponse)) {
-                    this.performanceMetrics.cacheHits++;
-                    return Promise.resolve(cachedResponse.response.clone());
-                }
-            }
-            
-            // 發送請求
-            try {
-                const response = await originalFetch(url, options);
-                
-                // 快取響應
-                if (this.shouldCache(response, options)) {
-                    this.cacheResponse(cacheKey, response);
-                }
-                
-                this.performanceMetrics.cacheMisses++;
-                return response;
-                
-            } catch (error) {
-                // 如果有過期的快取，返回它
-                if (this.cache.has(cacheKey)) {
-                    const cachedResponse = this.cache.get(cacheKey);
-                    console.warn('使用過期快取回應網路錯誤:', error);
-                    return cachedResponse.response.clone();
-                }
-                throw error;
-            }
-        };
+        // 不再攔截 fetch，改為與統一API管理器整合
+        if (window.unifiedAPI) {
+            // 註冊快取處理器到統一API管理器
+            window.unifiedAPI.registerCacheHandler({
+                generateCacheKey: this.generateCacheKey.bind(this),
+                shouldUseCache: this.shouldUseCache.bind(this),
+                shouldCache: this.shouldCache.bind(this),
+                cacheResponse: this.cacheResponse.bind(this),
+                isCacheExpired: this.isCacheExpired.bind(this),
+                cache: this.cache,
+                performanceMetrics: this.performanceMetrics
+            });
+            console.log('✅ 快取處理器已註冊到統一API管理器');
+        } else {
+            // 如果統一API管理器還未載入，延遲註冊
+            setTimeout(() => this.setupAPICache(), 100);
+        }
     }
     
     generateCacheKey(url, options) {
@@ -384,10 +365,27 @@ class PerformanceOptimizer {
     }
     
     setupMemoryCache() {
-        // 設置記憶體快取清理
-        setInterval(() => {
-            this.cleanupCache();
-        }, 5 * 60 * 1000); // 每5分鐘清理一次
+        // 使用資源管理器管理定時器
+        if (window.resourceManager) {
+            this.cacheCleanupTimer = window.resourceManager.registerManagedTimer(() => {
+                this.cleanupCache();
+            }, 5 * 60 * 1000, 'cache-cleanup');
+        } else {
+            // 降級方案
+            this.cacheCleanupTimer = setInterval(() => {
+                this.cleanupCache();
+            }, 5 * 60 * 1000);
+        }
+        
+        // 註冊清理方法
+        if (window.resourceManager) {
+            window.resourceManager.registerCleanupHandler(() => {
+                if (this.cacheCleanupTimer) {
+                    clearInterval(this.cacheCleanupTimer);
+                }
+                this.clearCache();
+            });
+        }
     }
     
     cleanupCache() {
@@ -414,40 +412,65 @@ class PerformanceOptimizer {
     
     monitorCoreWebVitals() {
         // 監控 LCP (Largest Contentful Paint)
-        new PerformanceObserver((entryList) => {
+        const lcpObserver = new PerformanceObserver((entryList) => {
             const entries = entryList.getEntries();
             const lastEntry = entries[entries.length - 1];
             console.log('LCP:', lastEntry.startTime);
-        }).observe({ entryTypes: ['largest-contentful-paint'] });
+        });
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
         
         // 監控 FID (First Input Delay)
-        new PerformanceObserver((entryList) => {
+        const fidObserver = new PerformanceObserver((entryList) => {
             const entries = entryList.getEntries();
             entries.forEach(entry => {
                 console.log('FID:', entry.processingStart - entry.startTime);
             });
-        }).observe({ entryTypes: ['first-input'] });
+        });
+        fidObserver.observe({ entryTypes: ['first-input'] });
         
         // 監控 CLS (Cumulative Layout Shift)
-        new PerformanceObserver((entryList) => {
+        const clsObserver = new PerformanceObserver((entryList) => {
             const entries = entryList.getEntries();
             entries.forEach(entry => {
                 if (!entry.hadRecentInput) {
                     console.log('CLS:', entry.value);
                 }
             });
-        }).observe({ entryTypes: ['layout-shift'] });
+        });
+        clsObserver.observe({ entryTypes: ['layout-shift'] });
+        
+        // 註冊 Observer 到資源管理器
+        if (window.resourceManager) {
+            window.resourceManager.registerObserver(lcpObserver, 'LCP-monitor');
+            window.resourceManager.registerObserver(fidObserver, 'FID-monitor');
+            window.resourceManager.registerObserver(clsObserver, 'CLS-monitor');
+        }
+        
+        // 保存引用以便後續清理
+        this.performanceObservers = [lcpObserver, fidObserver, clsObserver];
     }
     
     monitorResourceLoading() {
-        new PerformanceObserver((entryList) => {
+        const resourceObserver = new PerformanceObserver((entryList) => {
             const entries = entryList.getEntries();
             entries.forEach(entry => {
                 if (entry.duration > 1000) { // 載入時間超過1秒
                     console.warn(`慢速資源載入: ${entry.name} (${entry.duration}ms)`);
                 }
             });
-        }).observe({ entryTypes: ['resource'] });
+        });
+        resourceObserver.observe({ entryTypes: ['resource'] });
+        
+        // 註冊到資源管理器
+        if (window.resourceManager) {
+            window.resourceManager.registerObserver(resourceObserver, 'resource-loading-monitor');
+        }
+        
+        // 保存引用
+        if (!this.performanceObservers) {
+            this.performanceObservers = [];
+        }
+        this.performanceObservers.push(resourceObserver);
     }
     
     monitorUserInteractions() {

@@ -925,21 +925,22 @@ class UXEnhancement {
     }
     
     enhanceProgressFeedback() {
-        // 監聽 fetch 請求
-        const originalFetch = window.fetch;
+        // 不再攔截 fetch，改為監聽統一API管理器的事件
+        document.addEventListener('apiRequestStart', (event) => {
+            event.detail.loadingId = this.showLoadingIndicator('正在處理請求...');
+        });
         
-        window.fetch = async (...args) => {
-            const loadingId = this.showLoadingIndicator('正在處理請求...');
-            
-            try {
-                const response = await originalFetch(...args);
-                this.hideLoadingIndicator(loadingId);
-                return response;
-            } catch (error) {
-                this.hideLoadingIndicator(loadingId);
-                throw error;
+        document.addEventListener('apiRequestEnd', (event) => {
+            if (event.detail.loadingId) {
+                this.hideLoadingIndicator(event.detail.loadingId);
             }
-        };
+        });
+        
+        document.addEventListener('apiRequestError', (event) => {
+            if (event.detail.loadingId) {
+                this.hideLoadingIndicator(event.detail.loadingId);
+            }
+        });
     }
     
     showLoadingIndicator(message = '載入中...') {

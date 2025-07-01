@@ -1,0 +1,387 @@
+/**
+ * 深色模式顏色統一修正 v1.0
+ * 分析並修正深色模式中的所有顏色問題
+ */
+
+/* === 深色模式標準配色定義 === */
+[data-theme="dark"],
+body[data-theme="dark"] {
+    /* 背景色階 */
+    --bg-primary: #0f172a;      /* 主要背景 - 非常深的藍灰色 */
+    --bg-secondary: #1e293b;    /* 次要背景 - 深藍灰色 */
+    --bg-tertiary: #334155;     /* 第三級背景 - 中深灰 */
+    --bg-elevated: #475569;     /* 浮起元素背景 */
+    
+    /* 文字色階 */
+    --text-primary: #f8fafc;    /* 主要文字 - 純白 */
+    --text-secondary: #e2e8f0;  /* 次要文字 - 淺灰 */
+    --text-muted: #cbd5e1;      /* 輔助文字 - 中灰 */
+    --text-disabled: #64748b;   /* 禁用文字 - 深灰 */
+    
+    /* 邊框色階 */
+    --border-primary: #475569;  /* 主要邊框 */
+    --border-secondary: #374151; /* 次要邊框 */
+    --border-light: #334155;    /* 淺色邊框 */
+    
+    /* 功能色 - 深色模式適配 */
+    --accent-blue: #3b82f6;     /* 主要藍色 */
+    --accent-blue-hover: #2563eb; /* 藍色懸停 */
+    --accent-success: #10b981;  /* 成功綠色 */
+    --accent-warning: #f59e0b;  /* 警告橙色 */
+    --accent-error: #ef4444;    /* 錯誤紅色 */
+    --accent-info: #06b6d4;     /* 資訊青色 */
+    
+    /* 陰影效果 */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* === AI 智能助手 v2.7 深色模式修正 === */
+
+/* 主容器 */
+[data-theme="dark"] .ai-assistant-v27,
+body[data-theme="dark"] .ai-assistant-v27 {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-primary) !important;
+}
+
+/* 標題區域 */
+[data-theme="dark"] .ai-assistant-header,
+body[data-theme="dark"] .ai-assistant-header {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid var(--border-primary) !important;
+}
+
+[data-theme="dark"] .ai-assistant-header h3,
+body[data-theme="dark"] .ai-assistant-header h3 {
+    color: var(--text-primary) !important;
+}
+
+/* 狀態指示器 */
+[data-theme="dark"] .status-indicator,
+body[data-theme="dark"] .status-indicator {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-secondary) !important;
+}
+
+/* 標籤按鈕 */
+[data-theme="dark"] .tab-button,
+body[data-theme="dark"] .tab-button {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-secondary) !important;
+}
+
+[data-theme="dark"] .tab-button.active,
+body[data-theme="dark"] .tab-button.active {
+    background-color: var(--accent-blue) !important;
+    color: white !important;
+    border: 1px solid var(--accent-blue) !important;
+}
+
+[data-theme="dark"] .tab-button:hover:not(.active),
+body[data-theme="dark"] .tab-button:hover:not(.active) {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-primary) !important;
+}
+
+/* 標籤內容區域 */
+[data-theme="dark"] .tab-content,
+[data-theme="dark"] .batch-settings,
+[data-theme="dark"] .batch-section,
+[data-theme="dark"] .enhance-section,
+[data-theme="dark"] .translate-section,
+[data-theme="dark"] .style-section,
+[data-theme="dark"] .analytics-section,
+[data-theme="dark"] .history-section,
+body[data-theme="dark"] .tab-content,
+body[data-theme="dark"] .batch-settings,
+body[data-theme="dark"] .batch-section,
+body[data-theme="dark"] .enhance-section,
+body[data-theme="dark"] .translate-section,
+body[data-theme="dark"] .style-section,
+body[data-theme="dark"] .analytics-section,
+body[data-theme="dark"] .history-section {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* 設置和選項區域 */
+[data-theme="dark"] .settings-grid,
+[data-theme="dark"] .setting-group,
+[data-theme="dark"] .option-group,
+[data-theme="dark"] .options-grid,
+[data-theme="dark"] .input-group,
+[data-theme="dark"] .batch-header,
+[data-theme="dark"] .batch-controls,
+[data-theme="dark"] .batch-prompts-container,
+[data-theme="dark"] .prompts-list,
+[data-theme="dark"] .empty-state,
+body[data-theme="dark"] .settings-grid,
+body[data-theme="dark"] .setting-group,
+body[data-theme="dark"] .option-group,
+body[data-theme="dark"] .options-grid,
+body[data-theme="dark"] .input-group,
+body[data-theme="dark"] .batch-header,
+body[data-theme="dark"] .batch-controls,
+body[data-theme="dark"] .batch-prompts-container,
+body[data-theme="dark"] .prompts-list,
+body[data-theme="dark"] .empty-state {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-secondary) !important;
+}
+
+/* 進度和結果區域 */
+[data-theme="dark"] .batch-progress,
+[data-theme="dark"] .batch-results,
+[data-theme="dark"] .batch-stats,
+[data-theme="dark"] .progress-header,
+[data-theme="dark"] .results-header,
+[data-theme="dark"] .batch-actions,
+body[data-theme="dark"] .batch-progress,
+body[data-theme="dark"] .batch-results,
+body[data-theme="dark"] .batch-stats,
+body[data-theme="dark"] .progress-header,
+body[data-theme="dark"] .results-header,
+body[data-theme="dark"] .batch-actions {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-secondary) !important;
+}
+
+/* 表單元素 */
+[data-theme="dark"] .ai-assistant-v27 input,
+[data-theme="dark"] .ai-assistant-v27 select,
+[data-theme="dark"] .ai-assistant-v27 textarea,
+body[data-theme="dark"] .ai-assistant-v27 input,
+body[data-theme="dark"] .ai-assistant-v27 select,
+body[data-theme="dark"] .ai-assistant-v27 textarea {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-primary) !important;
+}
+
+[data-theme="dark"] .ai-assistant-v27 input:focus,
+[data-theme="dark"] .ai-assistant-v27 select:focus,
+[data-theme="dark"] .ai-assistant-v27 textarea:focus,
+body[data-theme="dark"] .ai-assistant-v27 input:focus,
+body[data-theme="dark"] .ai-assistant-v27 select:focus,
+body[data-theme="dark"] .ai-assistant-v27 textarea:focus {
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* 文字元素 */
+[data-theme="dark"] .ai-assistant-v27 label,
+[data-theme="dark"] .ai-assistant-v27 h4,
+[data-theme="dark"] .ai-assistant-v27 h5,
+[data-theme="dark"] .ai-assistant-v27 p,
+[data-theme="dark"] .ai-assistant-v27 span,
+[data-theme="dark"] .ai-assistant-v27 div,
+body[data-theme="dark"] .ai-assistant-v27 label,
+body[data-theme="dark"] .ai-assistant-v27 h4,
+body[data-theme="dark"] .ai-assistant-v27 h5,
+body[data-theme="dark"] .ai-assistant-v27 p,
+body[data-theme="dark"] .ai-assistant-v27 span,
+body[data-theme="dark"] .ai-assistant-v27 div {
+    color: var(--text-primary) !important;
+}
+
+/* 次要文字 */
+[data-theme="dark"] .ai-assistant-v27 .text-secondary,
+[data-theme="dark"] .ai-assistant-v27 .meta-label,
+[data-theme="dark"] .ai-assistant-v27 .help-text,
+body[data-theme="dark"] .ai-assistant-v27 .text-secondary,
+body[data-theme="dark"] .ai-assistant-v27 .meta-label,
+body[data-theme="dark"] .ai-assistant-v27 .help-text {
+    color: var(--text-secondary) !important;
+}
+
+/* 按鈕系統 */
+[data-theme="dark"] .ai-assistant-v27 .primary-button,
+body[data-theme="dark"] .ai-assistant-v27 .primary-button {
+    background-color: var(--accent-blue) !important;
+    color: white !important;
+    border: 1px solid var(--accent-blue) !important;
+}
+
+[data-theme="dark"] .ai-assistant-v27 .primary-button:hover,
+body[data-theme="dark"] .ai-assistant-v27 .primary-button:hover {
+    background-color: var(--accent-blue-hover) !important;
+    border-color: var(--accent-blue-hover) !important;
+}
+
+[data-theme="dark"] .ai-assistant-v27 .secondary-button,
+[data-theme="dark"] .ai-assistant-v27 .action-button,
+body[data-theme="dark"] .ai-assistant-v27 .secondary-button,
+body[data-theme="dark"] .ai-assistant-v27 .action-button {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-primary) !important;
+}
+
+[data-theme="dark"] .ai-assistant-v27 .secondary-button:hover,
+[data-theme="dark"] .ai-assistant-v27 .action-button:hover,
+body[data-theme="dark"] .ai-assistant-v27 .secondary-button:hover,
+body[data-theme="dark"] .ai-assistant-v27 .action-button:hover {
+    background-color: var(--bg-tertiary) !important;
+}
+
+[data-theme="dark"] .ai-assistant-v27 .danger-button,
+body[data-theme="dark"] .ai-assistant-v27 .danger-button {
+    background-color: var(--accent-error) !important;
+    color: white !important;
+    border: 1px solid var(--accent-error) !important;
+}
+
+[data-theme="dark"] .ai-assistant-v27 .success-button,
+body[data-theme="dark"] .ai-assistant-v27 .success-button {
+    background-color: var(--accent-success) !important;
+    color: white !important;
+    border: 1px solid var(--accent-success) !important;
+}
+
+/* 進度條 */
+[data-theme="dark"] .progress-bar,
+body[data-theme="dark"] .progress-bar {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border-secondary) !important;
+}
+
+[data-theme="dark"] .progress-fill,
+body[data-theme="dark"] .progress-fill {
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-hover)) !important;
+}
+
+/* 卡片和面板 */
+[data-theme="dark"] .metric-card,
+[data-theme="dark"] .info-card,
+[data-theme="dark"] .result-card,
+body[data-theme="dark"] .metric-card,
+body[data-theme="dark"] .info-card,
+body[data-theme="dark"] .result-card {
+    background-color: var(--bg-tertiary) !important;
+    border: 1px solid var(--border-secondary) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+/* 分隔線 */
+[data-theme="dark"] hr,
+[data-theme="dark"] .divider,
+body[data-theme="dark"] hr,
+body[data-theme="dark"] .divider {
+    border-color: var(--border-secondary) !important;
+}
+
+/* 下拉選單和選項 */
+[data-theme="dark"] .dropdown-menu,
+[data-theme="dark"] .select-options,
+body[data-theme="dark"] .dropdown-menu,
+body[data-theme="dark"] .select-options {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border-primary) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+[data-theme="dark"] .dropdown-item,
+[data-theme="dark"] .select-option,
+body[data-theme="dark"] .dropdown-item,
+body[data-theme="dark"] .select-option {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .dropdown-item:hover,
+[data-theme="dark"] .select-option:hover,
+body[data-theme="dark"] .dropdown-item:hover,
+body[data-theme="dark"] .select-option:hover {
+    background-color: var(--bg-tertiary) !important;
+}
+
+/* 工具提示 */
+[data-theme="dark"] .tooltip,
+body[data-theme="dark"] .tooltip {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-primary) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+/* 通知消息 */
+[data-theme="dark"] .notification,
+[data-theme="dark"] .alert,
+body[data-theme="dark"] .notification,
+body[data-theme="dark"] .alert {
+    background-color: var(--bg-tertiary) !important;
+    border: 1px solid var(--border-primary) !important;
+}
+
+[data-theme="dark"] .notification.success,
+body[data-theme="dark"] .notification.success {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    border-color: var(--accent-success) !important;
+    color: var(--accent-success) !important;
+}
+
+[data-theme="dark"] .notification.error,
+body[data-theme="dark"] .notification.error {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    border-color: var(--accent-error) !important;
+    color: var(--accent-error) !important;
+}
+
+[data-theme="dark"] .notification.warning,
+body[data-theme="dark"] .notification.warning {
+    background-color: rgba(245, 158, 11, 0.1) !important;
+    border-color: var(--accent-warning) !important;
+    color: var(--accent-warning) !important;
+}
+
+/* 滾動條美化 */
+[data-theme="dark"] ::-webkit-scrollbar,
+body[data-theme="dark"] ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track,
+body[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb,
+body[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+body[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--bg-elevated);
+}
+
+/* 確保所有子元素繼承正確顏色 */
+[data-theme="dark"] .ai-assistant-v27 *,
+body[data-theme="dark"] .ai-assistant-v27 * {
+    border-color: var(--border-secondary);
+}
+
+/* 修正可能的圖標顏色 */
+[data-theme="dark"] .ai-assistant-v27 .icon,
+[data-theme="dark"] .ai-assistant-v27 i,
+body[data-theme="dark"] .ai-assistant-v27 .icon,
+body[data-theme="dark"] .ai-assistant-v27 i {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .ai-assistant-v27 .icon.active,
+[data-theme="dark"] .ai-assistant-v27 i.active,
+body[data-theme="dark"] .ai-assistant-v27 .icon.active,
+body[data-theme="dark"] .ai-assistant-v27 i.active {
+    color: var(--accent-blue) !important;
+} 

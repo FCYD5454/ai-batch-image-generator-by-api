@@ -1,0 +1,65 @@
+/**
+ * 深色模式簡單修正教學
+ * 您可以複製這些規則到 HTML 中的 <style> 標籤內
+ */
+
+/* 方案1：經典黑色深色模式 */
+[data-theme="dark"] .ai-assistant-v27 {
+    background-color: #000000 !important;  /* 純黑背景 */
+    color: #ffffff !important;              /* 純白文字 */
+    border: 1px solid #333333 !important;  /* 深灰邊框 */
+}
+
+[data-theme="dark"] .tab-content {
+    background-color: #1a1a1a !important;  /* 深灰背景 */
+    color: #ffffff !important;              /* 純白文字 */
+}
+
+[data-theme="dark"] .ai-assistant-v27 input,
+[data-theme="dark"] .ai-assistant-v27 select {
+    background-color: #333333 !important;  /* 中灰背景 */
+    color: #ffffff !important;              /* 純白文字 */
+    border: 1px solid #555555 !important;  /* 邊框 */
+}
+
+/* 方案2：現代深色模式 */
+/*
+[data-theme="dark"] .ai-assistant-v27 {
+    background-color: #1e1e1e !important;  
+    color: #e5e5e5 !important;              
+    border: 1px solid #404040 !important;  
+}
+
+[data-theme="dark"] .tab-content {
+    background-color: #2d2d2d !important;  
+    color: #e5e5e5 !important;              
+}
+
+[data-theme="dark"] .ai-assistant-v27 input,
+[data-theme="dark"] .ai-assistant-v27 select {
+    background-color: #404040 !important;  
+    color: #e5e5e5 !important;              
+    border: 1px solid #606060 !important;  
+}
+*/
+
+/* 方案3：藍色調深色模式 */
+/*
+[data-theme="dark"] .ai-assistant-v27 {
+    background-color: #0f1419 !important;  
+    color: #c9d1d9 !important;              
+    border: 1px solid #30363d !important;  
+}
+
+[data-theme="dark"] .tab-content {
+    background-color: #161b22 !important;  
+    color: #c9d1d9 !important;              
+}
+
+[data-theme="dark"] .ai-assistant-v27 input,
+[data-theme="dark"] .ai-assistant-v27 select {
+    background-color: #21262d !important;  
+    color: #c9d1d9 !important;              
+    border: 1px solid #30363d !important;  
+}
+*/ 

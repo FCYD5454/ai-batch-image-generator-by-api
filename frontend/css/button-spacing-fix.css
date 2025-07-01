@@ -1,0 +1,203 @@
+/**
+ * 按鈕間距修正 CSS
+ * 解決按鈕太靠近的問題
+ */
+
+/* === 通用按鈕間距修正 === */
+
+/* 所有按鈕基本間距 */
+.ai-assistant-v27 button {
+    margin: 8px 6px !important;  /* 上下8px，左右6px */
+    min-width: 100px !important;  /* 最小寬度確保按鈕不會太小 */
+    padding: 8px 16px !important;  /* 內部填充 */
+}
+
+/* 動作按鈕組間距 */
+.action-buttons {
+    display: flex !important;
+    gap: 12px !important;  /* 按鈕之間12px間距 */
+    flex-wrap: wrap !important;  /* 允許換行 */
+    margin: 16px 0 !important;  /* 上下外邊距 */
+    justify-content: flex-start !important;
+}
+
+/* 按鈕組容器 */
+.button-group {
+    display: flex !important;
+    gap: 10px !important;  /* 10px間距 */
+    margin: 12px 0 !important;
+    flex-wrap: wrap !important;
+}
+
+/* 表單動作按鈕 */
+.form-actions {
+    display: flex !important;
+    gap: 15px !important;
+    margin-top: 20px !important;
+    justify-content: flex-start !important;
+}
+
+/* 歷史記錄控制按鈕 */
+.history-controls {
+    display: flex !important;
+    gap: 10px !important;
+    margin: 12px 0 !important;
+    flex-wrap: wrap !important;
+}
+
+.history-controls button {
+    margin: 4px 6px !important;
+}
+
+/* 批量處理按鈕 */
+.batch-actions {
+    display: flex !important;
+    gap: 12px !important;
+    margin: 16px 0 !important;
+    flex-wrap: wrap !important;
+}
+
+.batch-actions button {
+    margin: 6px 8px !important;
+}
+
+/* 分析功能按鈕 */
+.analytics-actions {
+    display: flex !important;
+    gap: 10px !important;
+    margin: 12px 0 !important;
+}
+
+.analytics-actions button {
+    margin: 6px 8px !important;
+}
+
+/* 增強控制按鈕 */
+.enhancement-controls,
+.translation-controls,
+.style-controls {
+    display: flex !important;
+    gap: 12px !important;
+    margin: 16px 0 !important;
+    flex-wrap: wrap !important;
+}
+
+/* 工具列按鈕 */
+.toolbar-buttons {
+    display: flex !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    margin: 8px 0 !important;
+}
+
+/* === 特定按鈕修正 === */
+
+/* 風格推薦按鈕 */
+button[onclick*="getStyleRecommendations"],
+.style-recommendation-btn {
+    margin: 10px 8px !important;
+    min-width: 120px !important;
+}
+
+/* 清除緩存按鈕 */
+button[onclick*="clearCache"],
+.clear-cache-btn {
+    margin: 8px 10px !important;
+}
+
+/* 導出數據按鈕 */
+button[onclick*="exportData"],
+.export-data-btn {
+    margin: 8px 10px !important;
+}
+
+/* 主要功能按鈕 */
+.primary-button {
+    margin: 10px 8px !important;
+    min-width: 120px !important;
+}
+
+/* 次要功能按鈕 */
+.secondary-button {
+    margin: 8px 6px !important;
+    min-width: 100px !important;
+}
+
+/* === 響應式設計 === */
+
+/* 平板設備 */
+@media (max-width: 1024px) {
+    .ai-assistant-v27 button {
+        margin: 10px 8px !important;
+        min-width: 110px !important;
+    }
+    
+    .action-buttons {
+        gap: 15px !important;
+        justify-content: center !important;
+    }
+}
+
+/* 手機設備 */
+@media (max-width: 768px) {
+    .ai-assistant-v27 button {
+        margin: 12px 8px !important;
+        min-width: 120px !important;
+        width: calc(50% - 16px) !important;  /* 兩列布局 */
+    }
+    
+    .action-buttons,
+    .button-group,
+    .form-actions {
+        gap: 15px !important;
+        justify-content: center !important;
+    }
+    
+    .history-controls,
+    .batch-actions,
+    .analytics-actions {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+}
+
+/* === 容器間距修正 === */
+
+/* 確保容器有足夠間距 */
+.ai-assistant-v27 .tab-content {
+    padding: 20px !important;
+}
+
+/* 選項組間距 */
+.option-group {
+    margin: 16px 0 !important;
+    padding: 16px !important;
+}
+
+/* 設置組間距 */
+.setting-group {
+    margin: 20px 0 !important;
+    padding: 16px !important;
+}
+
+/* === 特殊情況修正 === */
+
+/* 內聯按鈕組 */
+.inline-buttons {
+    display: inline-flex !important;
+    gap: 8px !important;
+    margin: 4px 0 !important;
+}
+
+/* 垂直按鈕組 */
+.vertical-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    margin: 12px 0 !important;
+}
+
+.vertical-buttons button {
+    margin: 4px 0 !important;
+    width: 100% !important;
+} 

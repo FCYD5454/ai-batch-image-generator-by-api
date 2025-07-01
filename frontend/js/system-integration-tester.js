@@ -713,15 +713,26 @@ class SystemIntegrationTester {
     }
     
     scheduleHealthChecks() {
-        // 每5分鐘執行一次健康檢查
-        setInterval(() => {
-            this.performHealthCheck();
-        }, 5 * 60 * 1000);
-        
-        // 初始健康檢查
-        setTimeout(() => {
-            this.performHealthCheck();
-        }, 3000);
+        // 使用資源管理器管理定時器
+        if (window.resourceManager) {
+            this.healthCheckTimer = window.resourceManager.registerManagedTimer(() => {
+                this.performHealthCheck();
+            }, 5 * 60 * 1000, 'system-health-check');
+            
+            // 初始健康檢查
+            this.initialCheckTimer = setTimeout(() => {
+                this.performHealthCheck();
+            }, 3000);
+        } else {
+            // 降級方案
+            this.healthCheckTimer = setInterval(() => {
+                this.performHealthCheck();
+            }, 5 * 60 * 1000);
+            
+            this.initialCheckTimer = setTimeout(() => {
+                this.performHealthCheck();
+            }, 3000);
+        }
     }
     
     performHealthCheck() {
@@ -805,45 +816,60 @@ class SystemIntegrationTester {
     }
     
     monitorMemoryUsage() {
-        // 每分鐘檢查一次內存使用
-        setInterval(() => {
-            const memoryInfo = this.getMemoryUsage();
-            if (memoryInfo && memoryInfo.used > 100) { // 超過100MB時警告
-                console.warn('💾 內存使用量較高:', memoryInfo);
-            }
-        }, 60 * 1000);
+        // 使用資源管理器管理記憶體監控定時器
+        if (window.resourceManager) {
+            this.memoryMonitorTimer = window.resourceManager.registerManagedTimer(() => {
+                const memoryInfo = this.getMemoryUsage();
+                if (memoryInfo && memoryInfo.used > 100) { // 超過100MB時警告
+                    console.warn('💾 內存使用量較高:', memoryInfo);
+                }
+            }, 60 * 1000, 'memory-usage-monitor');
+        } else {
+            // 降級方案
+            this.memoryMonitorTimer = setInterval(() => {
+                const memoryInfo = this.getMemoryUsage();
+                if (memoryInfo && memoryInfo.used > 100) {
+                    console.warn('💾 內存使用量較高:', memoryInfo);
+                }
+            }, 60 * 1000);
+        }
     }
     
     monitorNetworkRequests() {
-        // 監控長時間請求
-        const originalFetch = window.fetch;
+        // 不再攔截 fetch，改為監聽統一API管理器的事件
+        const requestTimes = new Map();
         
-        window.fetch = async function(...args) {
-            const startTime = Date.now();
-            
-            try {
-                const response = await originalFetch.apply(this, args);
+        document.addEventListener('apiRequestStart', (event) => {
+            requestTimes.set(event.detail.requestId, Date.now());
+        });
+        
+        document.addEventListener('apiRequestEnd', (event) => {
+            const startTime = requestTimes.get(event.detail.requestId);
+            if (startTime) {
                 const duration = Date.now() - startTime;
-                
                 if (duration > 5000) { // 超過5秒的請求
                     console.warn('🐌 慢速網絡請求:', {
-                        url: args[0],
+                        url: event.detail.url,
                         duration: `${duration}ms`,
-                        status: response.status
+                        status: event.detail.status
                     });
                 }
-                
-                return response;
-            } catch (error) {
+                requestTimes.delete(event.detail.requestId);
+            }
+        });
+        
+        document.addEventListener('apiRequestError', (event) => {
+            const startTime = requestTimes.get(event.detail.requestId);
+            if (startTime) {
                 const duration = Date.now() - startTime;
                 console.warn('❌ 網絡請求失敗:', {
-                    url: args[0],
+                    url: event.detail.url,
                     duration: `${duration}ms`,
-                    error: error.message
+                    error: event.detail.error
                 });
-                throw error;
+                requestTimes.delete(event.detail.requestId);
             }
-        };
+        });
     }
 }
 

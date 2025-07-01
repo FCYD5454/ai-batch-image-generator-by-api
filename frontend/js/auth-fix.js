@@ -97,42 +97,20 @@ class AuthenticationFix {
     }
     
     interceptAPIRequests() {
-        // 攔截所有API請求，自動添加認證頭
-        const originalFetch = window.fetch;
-        
-        window.fetch = async (url, options = {}) => {
-            // 如果是API請求且有token，自動添加認證頭
-            if (url.includes('/api/') && this.token && this.isAuthenticated) {
-                options.headers = {
-                    ...options.headers,
-                    'Authorization': `Bearer ${this.token}`
-                };
-            }
-            
-            try {
-                const response = await originalFetch(url, options);
-                
-                // 如果收到401錯誤，嘗試刷新token
-                if (response.status === 401 && this.isAuthenticated) {
-                    console.log('收到401錯誤，嘗試刷新認證...');
-                    await this.handleAuthError();
-                    
-                    // 重試請求
-                    if (this.token) {
-                        options.headers = {
-                            ...options.headers,
-                            'Authorization': `Bearer ${this.token}`
-                        };
-                        return originalFetch(url, options);
-                    }
-                }
-                
-                return response;
-            } catch (error) {
-                console.error('API請求失敗:', error);
-                throw error;
-            }
-        };
+        // 不再攔截 fetch，改為與統一API管理器整合
+        if (window.unifiedAPI) {
+            // 註冊認證處理器到統一API管理器
+            window.unifiedAPI.registerAuthHandler({
+                getToken: () => this.token,
+                isAuthenticated: () => this.isAuthenticated,
+                handleAuthError: () => this.handleAuthError(),
+                refreshToken: () => this.refreshToken()
+            });
+            console.log('✅ 認證處理器已註冊到統一API管理器');
+        } else {
+            // 如果統一API管理器還未載入，延遲註冊
+            setTimeout(() => this.interceptAPIRequests(), 100);
+        }
     }
     
     async handleAuthError() {

@@ -34,8 +34,8 @@
     --bg-secondary: #2d2d30;
     --bg-tertiary: #3c3c3c;
     --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --text-muted: #8a8a8a;
+    --text-secondary: #e0e0e0;
+    --text-muted: #b0b0b0;
     --border-color: #404040;
     --border-light: #505050;
     --shadow-color: rgba(0, 0, 0, 0.3);
@@ -2369,8 +2369,8 @@ header p {
 }
 
 #modelSelect option {
-    background: var(--card-bg);
-    color: var(--text-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
     padding: 8px;
 }
 

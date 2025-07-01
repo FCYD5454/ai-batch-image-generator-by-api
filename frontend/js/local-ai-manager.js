@@ -245,36 +245,209 @@ class LocalAIManager {
         return `
             <div class="tab-content" id="enhance-tab">
                 <div class="enhance-section">
-                    <div class="enhance-input">
-                        <label for="originalPrompt">原始提示詞</label>
-                        <textarea id="originalPrompt" rows="4" placeholder="輸入您要增強的提示詞..."></textarea>
-                    </div>
-                    
-                    <div class="enhance-options">
-                        <div class="option-group">
-                            <label for="enhanceStyle">增強風格</label>
-                            <select id="enhanceStyle">
-                                <option value="detailed">詳細描述</option>
-                                <option value="creative">創意擴展</option>
-                                <option value="technical">技術專業</option>
-                                <option value="artistic">藝術風格</option>
-                                <option value="simple">簡潔明瞭</option>
-                            </select>
+                    <!-- 快速模板區域 -->
+                    <div class="prompt-templates">
+                        <h4><i class="fas fa-templates"></i> 快速模板</h4>
+                        <div class="template-grid">
+                            <button class="template-btn" data-template="photo" title="攝影風格">
+                                <i class="fas fa-camera"></i>
+                                <span>攝影</span>
+                            </button>
+                            <button class="template-btn" data-template="art" title="藝術繪畫">
+                                <i class="fas fa-palette"></i>
+                                <span>藝術</span>
+                            </button>
+                            <button class="template-btn" data-template="anime" title="動漫風格">
+                                <i class="fas fa-user-ninja"></i>
+                                <span>動漫</span>
+                            </button>
+                            <button class="template-btn" data-template="realistic" title="寫實風格">
+                                <i class="fas fa-eye"></i>
+                                <span>寫實</span>
+                            </button>
+                            <button class="template-btn" data-template="fantasy" title="奇幻主題">
+                                <i class="fas fa-dragon"></i>
+                                <span>奇幻</span>
+                            </button>
+                            <button class="template-btn" data-template="portrait" title="人像攝影">
+                                <i class="fas fa-user"></i>
+                                <span>人像</span>
+                            </button>
                         </div>
                     </div>
-                    
+
+                    <!-- 輸入區域 -->
+                    <div class="enhance-input">
+                        <div class="input-header">
+                            <label for="originalPrompt">
+                                <i class="fas fa-edit"></i> 原始提示詞
+                            </label>
+                            <div class="input-tools">
+                                <button id="clearPrompt" class="tool-btn" title="清空內容">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                                <button id="pastePrompt" class="tool-btn" title="貼上剪貼簿內容">
+                                    <i class="fas fa-paste"></i>
+                                </button>
+                                <span class="char-count" id="charCount">0/2000</span>
+                            </div>
+                        </div>
+                        <textarea id="originalPrompt" rows="6" maxlength="2000" 
+                                  placeholder="在此輸入您要增強的提示詞...&#10;例如：一隻可愛的小貓在花園裡玩耍"></textarea>
+                    </div>
+
+                    <!-- 增強選項 -->
+                    <div class="enhance-options">
+                        <div class="options-grid">
+                            <div class="option-group">
+                                <label for="enhanceStyle">
+                                    <i class="fas fa-magic"></i> 增強風格
+                                </label>
+                                <select id="enhanceStyle">
+                                    <option value="detailed">🔍 詳細描述 - 添加更多細節</option>
+                                    <option value="creative">✨ 創意擴展 - 增加想像元素</option>
+                                    <option value="technical">⚙️ 技術專業 - 專業攝影術語</option>
+                                    <option value="artistic">🎨 藝術風格 - 藝術表現手法</option>
+                                    <option value="simple">📝 簡潔明瞭 - 保持簡單清楚</option>
+                                    <option value="cinematic">🎬 電影感 - 電影級視覺效果</option>
+                                    <option value="dreamy">💭 夢幻感 - 柔和夢幻風格</option>
+                                </select>
+                            </div>
+                            
+                            <div class="option-group">
+                                <label for="enhanceIntensity">
+                                    <i class="fas fa-sliders-h"></i> 增強強度
+                                </label>
+                                <div class="intensity-slider">
+                                    <input type="range" id="enhanceIntensity" min="1" max="5" value="3" step="1">
+                                    <div class="intensity-labels">
+                                        <span>輕度</span>
+                                        <span>中度</span>
+                                        <span>強度</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="option-group">
+                                <label for="targetLanguage">
+                                    <i class="fas fa-language"></i> 輸出語言
+                                </label>
+                                <select id="targetLanguage">
+                                    <option value="zh-tw">繁體中文</option>
+                                    <option value="zh-cn">簡體中文</option>
+                                    <option value="en">English</option>
+                                    <option value="ja">日本語</option>
+                                    <option value="ko">한국어</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 高級選項 -->
+                        <details class="advanced-options">
+                            <summary><i class="fas fa-cog"></i> 高級選項</summary>
+                            <div class="advanced-grid">
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="addQuality" checked>
+                                        <span class="checkmark"></span>
+                                        添加品質修飾詞
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="addLighting">
+                                        <span class="checkmark"></span>
+                                        增強光影描述
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="addComposition">
+                                        <span class="checkmark"></span>
+                                        改善構圖描述
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="addNegative">
+                                        <span class="checkmark"></span>
+                                        生成負面提示詞
+                                    </label>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+
+                    <!-- 控制按鈕 -->
                     <div class="enhance-controls">
-                        <button id="enhancePromptLocal" class="btn-primary">
-                            <i class="fas fa-wand-magic-sparkles"></i> 本地增強
+                        <button id="enhancePromptLocal" class="btn-primary enhanced">
+                            <i class="fas fa-wand-magic-sparkles"></i> 
+                            <span>AI 智能增強</span>
+                        </button>
+                        <button id="quickEnhance" class="btn-secondary">
+                            <i class="fas fa-bolt"></i> 
+                            <span>快速增強</span>
+                        </button>
+                        <button id="randomEnhance" class="btn-accent">
+                            <i class="fas fa-dice"></i> 
+                            <span>隨機靈感</span>
                         </button>
                     </div>
-                    
+
+                    <!-- 結果展示區域 -->
                     <div class="enhance-results" id="enhanceResults" style="display: none;">
                         <div class="result-header">
-                            <h4>增強結果</h4>
+                            <h4><i class="fas fa-sparkles"></i> 增強結果</h4>
+                            <div class="result-actions">
+                                <button id="copyResult" class="action-btn" title="複製結果">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button id="saveResult" class="action-btn" title="保存結果">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button id="shareResult" class="action-btn" title="分享結果">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="enhanced-prompt" id="enhancedPrompt"></div>
-                        <div class="enhancement-suggestions" id="enhancementSuggestions"></div>
+                        
+                        <div class="results-container">
+                            <div class="enhanced-prompt-container">
+                                <label>增強後的提示詞：</label>
+                                <div class="enhanced-prompt" id="enhancedPrompt"></div>
+                            </div>
+                            
+                            <div class="negative-prompt-container" id="negativePromptContainer" style="display: none;">
+                                <label>負面提示詞：</label>
+                                <div class="negative-prompt" id="negativePrompt"></div>
+                            </div>
+                            
+                            <div class="enhancement-suggestions" id="enhancementSuggestions"></div>
+                            
+                            <div class="comparison-section">
+                                <h5><i class="fas fa-balance-scale"></i> 增強對比</h5>
+                                <div class="comparison-grid">
+                                    <div class="before-section">
+                                        <label>修改前：</label>
+                                        <div class="original-text" id="originalText"></div>
+                                    </div>
+                                    <div class="after-section">
+                                        <label>修改後：</label>
+                                        <div class="enhanced-text" id="enhancedText"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 歷史記錄 -->
+                    <div class="enhance-history">
+                        <div class="history-header">
+                            <h4><i class="fas fa-history"></i> 增強歷史</h4>
+                            <button id="clearHistory" class="btn-text">
+                                <i class="fas fa-trash"></i> 清空歷史
+                            </button>
+                        </div>
+                        <div class="history-list" id="enhanceHistoryList">
+                            <div class="history-empty">
+                                <i class="fas fa-clock"></i>
+                                <p>暫無增強歷史</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

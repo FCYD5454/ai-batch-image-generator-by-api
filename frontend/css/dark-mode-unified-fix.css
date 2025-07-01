@@ -1,0 +1,5 @@
+/* 深色模式統一修正 */
+[data-theme="dark"] .ai-assistant-v27 {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+} 

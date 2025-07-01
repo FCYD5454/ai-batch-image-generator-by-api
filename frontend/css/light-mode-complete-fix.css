@@ -1,0 +1,148 @@
+/**
+ * 淺色模式完整修正
+ * 解決所有內容區域的背景和文字顏色問題
+ */
+
+/* 基礎容器修正 */
+[data-theme="light"] .ai-assistant-v27,
+[data-theme="light"] .local-ai-manager,
+body:not([data-theme="dark"]) .ai-assistant-v27,
+body:not([data-theme="dark"]) .local-ai-manager {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* 標籤內容區域全面修正 */
+[data-theme="light"] .tab-content,
+[data-theme="light"] .batch-settings,
+[data-theme="light"] .batch-section,
+[data-theme="light"] .enhance-section,
+[data-theme="light"] .translate-section,
+[data-theme="light"] .style-section,
+[data-theme="light"] .analytics-section,
+[data-theme="light"] .history-section,
+body:not([data-theme="dark"]) .tab-content,
+body:not([data-theme="dark"]) .batch-settings,
+body:not([data-theme="dark"]) .batch-section,
+body:not([data-theme="dark"]) .enhance-section,
+body:not([data-theme="dark"]) .translate-section,
+body:not([data-theme="dark"]) .style-section,
+body:not([data-theme="dark"]) .analytics-section,
+body:not([data-theme="dark"]) .history-section {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* 設置和選項區域 */
+[data-theme="light"] .settings-grid,
+[data-theme="light"] .setting-group,
+[data-theme="light"] .option-group,
+[data-theme="light"] .options-grid,
+[data-theme="light"] .input-group,
+body:not([data-theme="dark"]) .settings-grid,
+body:not([data-theme="dark"]) .setting-group,
+body:not([data-theme="dark"]) .option-group,
+body:not([data-theme="dark"]) .options-grid,
+body:not([data-theme="dark"]) .input-group {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* 進度和結果區域 */
+[data-theme="light"] .batch-progress,
+[data-theme="light"] .batch-results,
+[data-theme="light"] .batch-stats,
+[data-theme="light"] .progress-header,
+[data-theme="light"] .results-header,
+[data-theme="light"] .batch-header,
+body:not([data-theme="dark"]) .batch-progress,
+body:not([data-theme="dark"]) .batch-results,
+body:not([data-theme="dark"]) .batch-stats,
+body:not([data-theme="dark"]) .progress-header,
+body:not([data-theme="dark"]) .results-header,
+body:not([data-theme="dark"]) .batch-header {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* 表單元素 */
+[data-theme="light"] .tab-content input,
+[data-theme="light"] .tab-content select,
+[data-theme="light"] .tab-content textarea,
+body:not([data-theme="dark"]) .tab-content input,
+body:not([data-theme="dark"]) .tab-content select,
+body:not([data-theme="dark"]) .tab-content textarea {
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* 文字元素 */
+[data-theme="light"] .tab-content label,
+[data-theme="light"] .tab-content h4,
+[data-theme="light"] .tab-content h5,
+[data-theme="light"] .tab-content p,
+[data-theme="light"] .tab-content span,
+[data-theme="light"] .tab-content div,
+body:not([data-theme="dark"]) .tab-content label,
+body:not([data-theme="dark"]) .tab-content h4,
+body:not([data-theme="dark"]) .tab-content h5,
+body:not([data-theme="dark"]) .tab-content p,
+body:not([data-theme="dark"]) .tab-content span,
+body:not([data-theme="dark"]) .tab-content div {
+    color: black !important;
+}
+
+/* 按鈕修正 */
+[data-theme="light"] .tab-content .secondary-button,
+[data-theme="light"] .tab-content .action-button,
+body:not([data-theme="dark"]) .tab-content .secondary-button,
+body:not([data-theme="dark"]) .tab-content .action-button {
+    background-color: #f3f4f6 !important;
+    color: black !important;
+    border: 1px solid #d1d5db !important;
+}
+
+[data-theme="light"] .tab-content .primary-button,
+body:not([data-theme="dark"]) .tab-content .primary-button {
+    background-color: #2563eb !important;
+    color: white !important;
+    border: 1px solid #2563eb !important;
+}
+
+[data-theme="light"] .tab-content .danger-button,
+body:not([data-theme="dark"]) .tab-content .danger-button {
+    background-color: #dc2626 !important;
+    color: white !important;
+    border: 1px solid #dc2626 !important;
+}
+
+/* 空狀態和提示信息 */
+[data-theme="light"] .empty-state,
+[data-theme="light"] .prompts-list,
+[data-theme="light"] .batch-prompts-container,
+body:not([data-theme="dark"]) .empty-state,
+body:not([data-theme="dark"]) .prompts-list,
+body:not([data-theme="dark"]) .batch-prompts-container {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* 強制覆蓋所有深色背景 */
+[data-theme="light"] .ai-assistant-v27 *:not(.tab-button.active):not(.primary-button):not(.danger-button),
+body:not([data-theme="dark"]) .ai-assistant-v27 *:not(.tab-button.active):not(.primary-button):not(.danger-button) {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* 進度條修正 */
+[data-theme="light"] .progress-bar,
+body:not([data-theme="dark"]) .progress-bar {
+    background-color: #f3f4f6 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+[data-theme="light"] .progress-fill,
+body:not([data-theme="dark"]) .progress-fill {
+    background-color: #2563eb !important;
+} 
