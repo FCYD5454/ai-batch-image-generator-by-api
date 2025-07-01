@@ -1,0 +1,6 @@
+# Dockerfile.find-deps - 找出確切的依賴套件名稱
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y apt-file && apt-file update
+
+CMD ["apt-file", "find", "libgthread-2.0.so.0"] 

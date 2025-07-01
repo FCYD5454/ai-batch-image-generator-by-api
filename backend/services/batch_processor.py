@@ -613,4 +613,85 @@ class BatchProcessor:
             "success": True,
             "cleaned_jobs": len(old_jobs),
             "job_ids": old_jobs
-        } 
+        }
+    
+    def get_jobs_list(self, status_filter: str = None, limit: int = 50) -> Dict:
+        """
+        獲取作業列表
+        
+        Args:
+            status_filter: 狀態過濾器 (pending, running, completed, failed)
+            limit: 返回數量限制
+            
+        Returns:
+            Dict: 作業列表
+        """
+        try:
+            jobs_list = []
+            
+            for job in self.jobs.values():
+                # 狀態過濾
+                if status_filter:
+                    if status_filter == "running" and job.status not in [TaskStatus.PROCESSING, TaskStatus.QUEUED]:
+                        continue
+                    elif status_filter == "completed" and job.status != TaskStatus.COMPLETED:
+                        continue
+                    elif status_filter == "failed" and job.status != TaskStatus.FAILED:
+                        continue
+                    elif status_filter == "pending" and job.status != TaskStatus.PENDING:
+                        continue
+                
+                # 統計任務狀態
+                task_stats = {
+                    "total": len(job.tasks),
+                    "completed": 0,
+                    "failed": 0,
+                    "processing": 0,
+                    "pending": 0
+                }
+                
+                for task in job.tasks:
+                    if task.status == TaskStatus.COMPLETED:
+                        task_stats["completed"] += 1
+                    elif task.status == TaskStatus.FAILED:
+                        task_stats["failed"] += 1
+                    elif task.status == TaskStatus.PROCESSING:
+                        task_stats["processing"] += 1
+                    else:
+                        task_stats["pending"] += 1
+                
+                jobs_list.append({
+                    "id": job.id,
+                    "name": job.name,
+                    "status": job.status.value,
+                    "progress": job.progress,
+                    "task_stats": task_stats,
+                    "created_at": job.created_at.isoformat() if job.created_at else None,
+                    "started_at": job.started_at.isoformat() if job.started_at else None,
+                    "completed_at": job.completed_at.isoformat() if job.completed_at else None,
+                    "concurrent_limit": job.concurrent_limit,
+                    "auto_retry_failed": job.auto_retry_failed,
+                    "pause_on_error": job.pause_on_error
+                })
+            
+            # 按創建時間排序，最新的在前
+            jobs_list.sort(key=lambda x: x["created_at"] or "", reverse=True)
+            
+            # 限制返回數量
+            if limit and limit > 0:
+                jobs_list = jobs_list[:limit]
+            
+            return {
+                "success": True,
+                "jobs": jobs_list,
+                "total_count": len(self.jobs),
+                "filtered_count": len(jobs_list)
+            }
+            
+        except Exception as e:
+            logger.error(f"獲取作業列表失敗: {str(e)}")
+            return {
+                "success": False,
+                "error": f"獲取作業列表失敗: {str(e)}",
+                "jobs": []
+            } 

@@ -64,6 +64,30 @@ instance/
 # pyenv
 .python-version
 
+# 數據庫文件
+*.db
+*.sqlite3
+
 # 配置文件（包含敏感信息）
 config/production.py
-config/local.py 
+config/local.py
+local_development.env
+production-config.env
+
+# 開發工具特定
+.cursor/
+
+# 暫時性的啟動腳本
+start_fixed.bat
+start_simple.bat
+start_local_test.bat
+
+# 專案根目錄下的報告和日誌
+/backend_final_status_report.md
+/backend_fix_report.md
+/frontend-optimization-complete-summary.md
+/PROJECT_COMPREHENSIVE_GUIDE.md
+/PROJECT_STATUS_REPORT.md
+/theme-optimization-guide.md
+/next-steps-action-plan.md
+/cleanup_tasks.md 

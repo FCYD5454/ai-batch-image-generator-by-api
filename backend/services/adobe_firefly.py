@@ -5,16 +5,48 @@ Adobe Firefly API 整合服務
 
 import requests
 import json
-import time
-import uuid
-from datetime import datetime
+import logging
 import os
+import base64
+import io
+from PIL import Image
+from datetime import datetime
+import uuid
+from .image_utils import save_generated_image
+
+logger = logging.getLogger(__name__)
+
+# TODO: 將 save_generated_image 移至一個共享的 `utils.py` 或 `image_service.py`
+GENERATED_IMAGES_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'images')
+if not os.path.exists(GENERATED_IMAGES_DIR):
+    os.makedirs(GENERATED_IMAGES_DIR)
+
+def save_generated_image(image_data, prompt, index, provider='unknown'):
+    """保存生成的圖片到本地"""
+    try:
+        image_bytes = base64.b64decode(image_data)
+        image = Image.open(io.BytesIO(image_bytes))
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        safe_prompt = "".join(c for c in prompt[:20] if c.isalnum()).rstrip()
+        filename = f"{timestamp}_{provider}_{safe_prompt}_{index+1}.png"
+        filepath = os.path.join(GENERATED_IMAGES_DIR, filename)
+        image.save(filepath, 'PNG')
+        file_size = os.path.getsize(filepath)
+        logger.info(f"圖片已保存: {filepath}, 大小: {file_size} bytes")
+        return filename, filepath, file_size
+    except Exception as e:
+        logger.error(f"保存圖片失敗: {str(e)}")
+        return f"error_{provider}_{index+1}.png", "", 0
 
 class AdobeFireflyService:
-    def __init__(self):
-        self.base_url = "https://firefly-api.adobe.io/v2/images/generate"
-        self.api_key = None
-        self.client_id = None
+    BASE_URL = "https://firefly-api.adobe.io/v2/images/generate"
+
+    def __init__(self, api_key, client_id="ai-image-generator"):
+        if not api_key:
+            raise ValueError("Adobe Firefly API key is required.")
+        self.api_key = api_key
+        self.client_id = client_id
+        self.db_service = None
         self.supported_models = {
             'firefly-v2': {
                 'name': 'Firefly v2',
@@ -28,243 +60,76 @@ class AdobeFireflyService:
             }
         }
         
-    def configure(self, api_key, client_id=None):
-        """配置 Adobe Firefly API 認證"""
-        self.api_key = api_key
-        self.client_id = client_id or "ai-image-generator"
-        
-    def validate_connection(self):
-        """驗證 API 連接是否正常"""
-        if not self.api_key:
-            return False, "未設置 API 金鑰"
-            
-        try:
-            headers = {
-                'Authorization': f'Bearer {self.api_key}',
-                'X-API-Key': self.client_id,
-                'Content-Type': 'application/json'
-            }
-            
-            # 測試連接
-            test_data = {
-                'prompt': 'test connection',
-                'size': '512x512',
-                'n': 1
-            }
-            
-            response = requests.post(
-                self.base_url,
-                headers=headers,
-                json=test_data,
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                return True, "連接成功"
-            elif response.status_code == 401:
-                return False, "API 金鑰無效"
-            elif response.status_code == 403:
-                return False, "API 權限不足"
-            else:
-                return False, f"連接失敗: {response.status_code}"
-                
-        except requests.exceptions.Timeout:
-            return False, "連接超時"
-        except requests.exceptions.ConnectionError:
-            return False, "網路連接錯誤"
-        except Exception as e:
-            return False, f"連接錯誤: {str(e)}"
-    
-    def generate_images(self, prompt, **kwargs):
+    def set_db_service(self, db_service):
+        self.db_service = db_service
+
+    def generate_images(self, prompt, image_size, image_count, model_name, generation_id=None):
         """
-        生成圖片
-        
-        Args:
-            prompt (str): 提示詞
-            **kwargs: 其他參數
-                - model (str): 模型名稱 (firefly-v2, firefly-v3)
-                - size (str): 圖片尺寸 (512x512, 1024x1024, 2048x2048)
-                - count (int): 生成數量 (1-4)
-                - style (str): 風格設定
-                - negative_prompt (str): 負面提示詞
-                - seed (int): 隨機種子
-                - quality (str): 品質設定 (standard, high)
-        
-        Returns:
-            dict: 包含生成結果的字典
+        生成圖片並遵循標準化輸出格式
         """
+        logger.info(f"使用 Adobe Firefly ({model_name or 'firefly-v2'}) 生成圖片...")
         
-        if not self.api_key:
-            return {
-                'success': False,
-                'error': '未配置 Adobe Firefly API 金鑰',
-                'images': []
-            }
-        
-        # 參數處理
-        model = kwargs.get('model', 'firefly-v2')
-        size = kwargs.get('size', '1024x1024')
-        count = min(kwargs.get('count', 1), 4)
-        style = kwargs.get('style', 'auto')
-        negative_prompt = kwargs.get('negative_prompt', '')
-        seed = kwargs.get('seed')
-        quality = kwargs.get('quality', 'standard')
-        
-        # 構建請求數據
-        request_data = {
-            'prompt': prompt,
-            'size': size,
-            'n': count,
-            'model': model,
-            'response_format': 'b64_json',
-            'quality': quality
-        }
-        
-        # 添加可選參數
-        if negative_prompt:
-            request_data['negative_prompt'] = negative_prompt
-            
-        if seed:
-            request_data['seed'] = seed
-            
-        if style != 'auto':
-            request_data['style'] = style
-        
-        # 設置請求頭
         headers = {
             'Authorization': f'Bearer {self.api_key}',
             'X-API-Key': self.client_id,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/json'
+        }
+        
+        request_data = {
+            'prompt': prompt,
+            'size': image_size,
+            'n': image_count,
+            'model': model_name or 'firefly-v2',
+            'response_format': 'b64_json'
         }
         
         try:
-            print(f"🎨 Adobe Firefly 開始生成: {prompt[:50]}...")
+            response = requests.post(self.BASE_URL, headers=headers, json=request_data, timeout=120)
+            response.raise_for_status() # 如果狀態碼不是 2xx，則引發 HTTPError
             
-            # 發送請求
-            response = requests.post(
-                self.base_url,
-                headers=headers,
-                json=request_data,
-                timeout=120  # Adobe API 可能較慢
-            )
+            result = response.json()
+            images = []
             
-            print(f"📡 API 回應狀態: {response.status_code}")
+            if 'data' not in result:
+                raise Exception("API 回應中缺少 'data' 欄位")
+
+            for i, image_info in enumerate(result['data']):
+                if 'b64_json' in image_info:
+                    b64_data = image_info['b64_json']
+                    filename, file_path, file_size = save_generated_image(b64_data, prompt, i, 'adobe_firefly')
+                    
+                    if self.db_service and generation_id:
+                        self.db_service.save_generated_image(
+                            generation_id=generation_id,
+                            filename=filename,
+                            original_prompt=prompt,
+                            api_provider='adobe_firefly',
+                            model_name=model_name or 'firefly-v2',
+                            image_size=image_size,
+                            file_path=file_path,
+                            file_size=file_size,
+                            mime_type='image/png'
+                        )
+                    
+                    images.append({
+                        'base64': b64_data,
+                        'mime_type': 'image/png',
+                        'filename': filename,
+                        'url': f'/generated_images/{filename}'
+                    })
+
+            if not images:
+                raise Exception("未能從 Adobe Firefly 生成任何圖片。")
             
-            if response.status_code == 200:
-                result = response.json()
-                
-                images = []
-                if 'data' in result:
-                    for idx, image_data in enumerate(result['data']):
-                        if 'b64_json' in image_data:
-                            # 生成唯一檔名
-                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                            filename = f"firefly_{timestamp}_{uuid.uuid4().hex[:8]}_{idx+1}.png"
-                            
-                            images.append({
-                                'filename': filename,
-                                'b64_data': image_data['b64_json'],
-                                'prompt': prompt,
-                                'model': model,
-                                'size': size,
-                                'provider': 'adobe_firefly',
-                                'metadata': {
-                                    'style': style,
-                                    'quality': quality,
-                                    'negative_prompt': negative_prompt,
-                                    'seed': seed,
-                                    'revised_prompt': image_data.get('revised_prompt', prompt)
-                                }
-                            })
-                
-                print(f"✅ Adobe Firefly 生成成功: {len(images)} 張圖片")
-                
-                return {
-                    'success': True,
-                    'images': images,
-                    'provider': 'adobe_firefly',
-                    'model': model,
-                    'total_count': len(images)
-                }
-                
-            elif response.status_code == 400:
-                error_data = response.json()
-                error_msg = error_data.get('error', {}).get('message', '請求參數錯誤')
-                print(f"❌ Adobe Firefly 參數錯誤: {error_msg}")
-                
-                return {
-                    'success': False,
-                    'error': f'參數錯誤: {error_msg}',
-                    'images': []
-                }
-                
-            elif response.status_code == 401:
-                print("❌ Adobe Firefly API 金鑰無效")
-                return {
-                    'success': False,
-                    'error': 'API 金鑰無效或已過期',
-                    'images': []
-                }
-                
-            elif response.status_code == 403:
-                print("❌ Adobe Firefly API 權限不足")
-                return {
-                    'success': False,
-                    'error': 'API 權限不足或配額已用完',
-                    'images': []
-                }
-                
-            elif response.status_code == 429:
-                print("❌ Adobe Firefly API 請求過於頻繁")
-                return {
-                    'success': False,
-                    'error': '請求過於頻繁，請稍後再試',
-                    'images': []
-                }
-                
-            else:
-                error_text = response.text
-                print(f"❌ Adobe Firefly API 未知錯誤: {response.status_code} - {error_text}")
-                
-                return {
-                    'success': False,
-                    'error': f'API 錯誤 ({response.status_code}): {error_text}',
-                    'images': []
-                }
-                
-        except requests.exceptions.Timeout:
-            print("❌ Adobe Firefly API 請求超時")
-            return {
-                'success': False,
-                'error': '請求超時，Adobe Firefly 伺服器可能忙碌',
-                'images': []
-            }
-            
-        except requests.exceptions.ConnectionError:
-            print("❌ Adobe Firefly API 連接錯誤")
-            return {
-                'success': False,
-                'error': '無法連接到 Adobe Firefly 伺服器',
-                'images': []
-            }
-            
-        except json.JSONDecodeError:
-            print("❌ Adobe Firefly API 回應格式錯誤")
-            return {
-                'success': False,
-                'error': 'API 回應格式錯誤',
-                'images': []
-            }
-            
+            return images
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Adobe Firefly API 請求失敗: {e}")
+            raise Exception(f"Adobe Firefly API 請求失敗: {e}")
         except Exception as e:
-            print(f"❌ Adobe Firefly API 未預期錯誤: {str(e)}")
-            return {
-                'success': False,
-                'error': f'未預期錯誤: {str(e)}',
-                'images': []
-            }
-    
+            logger.error(f"處理 Adobe Firefly 回應時發生錯誤: {e}")
+            raise Exception(f"處理 Adobe Firefly 回應時發生錯誤: {e}")
+
     def get_model_info(self):
         """獲取模型資訊"""
         return self.supported_models
@@ -370,5 +235,5 @@ class AdobeFireflyService:
         
         return max(estimated_time, 10)  # 最少10秒
 
-# 實例化服務
-adobe_firefly_service = AdobeFireflyService() 
+# 移除舊的全域實例
+# adobe_firefly_service = AdobeFireflyService() 

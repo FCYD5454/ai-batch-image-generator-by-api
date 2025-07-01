@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # 主應用服務
+  app:
+    build: .
+    container_name: image-generator-app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - STABILITY_API_KEY=${STABILITY_API_KEY}
+      - DATABASE_URL=sqlite:///data/image_generator.db
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./data:/app/data
+      - ./assets:/app/assets
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  # Redis 緩存服務
+  redis:
+    image: redis:7-alpine
+    container_name: image-generator-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  # Nginx 反向代理 (暫時禁用，因缺少設定檔)
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: image-generator-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./nginx/ssl:/etc/nginx/ssl
+  #     - ./assets:/var/www/assets
+  #   depends_on:
+  #     - app
+  #   networks:
+  #     - app-network
+
+  # 監控服務 (可選)
+  watchtower:
+    image: containrrr/watchtower
+    container_name: image-generator-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=3600
+      - WATCHTOWER_CLEANUP=true
+    networks:
+      - app-network
+
+volumes:
+  redis_data:
+
+networks:
+  app-network:
+    driver: bridge 

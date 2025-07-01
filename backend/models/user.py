@@ -477,6 +477,19 @@ class UserModel:
             logger.error(f"記錄用戶活動失敗: {str(e)}")
         finally:
             conn.close()
+    
+    def log_activity(self, user_id, action, details=None, ip_address=None, user_agent=None):
+        """
+        記錄用戶活動 (log_user_activity 的別名，用於向後兼容)
+        
+        Args:
+            user_id: 用戶ID
+            action: 活動類型
+            details: 活動詳情
+            ip_address: IP地址
+            user_agent: 用戶代理
+        """
+        return self.log_user_activity(user_id, action, details, ip_address, user_agent)
 
 # 全局用戶模型實例
 user_model = UserModel() 

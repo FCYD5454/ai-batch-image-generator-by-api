@@ -353,3 +353,82 @@ fetch('http://localhost:5000/api/generate-image', {
 - **文檔**: 查看 README.md
 - **問題追蹤**: GitHub Issues
 - **貢獻指南**: CONTRIBUTING.md 
+
+# API 文檔 (API Documentation)
+
+本文件概述了 ImageGeneration_Script 後端可用的 API 端點。
+這是根據 `backend/api/` 目錄下的檔案結構自動生成的初步文檔。
+
+---
+
+## 1. 使用者與認證 (User & Authentication)
+
+管理使用者帳號、登入、註冊和 API 金鑰。
+
+*   **認證 (`/api/auth`)**:
+    *   推測模組: `auth.py`
+    *   可能功能: 處理使用者登入 (`/login`)、登出 (`/logout`)、註冊 (`/register`)、密碼重設等。
+*   **使用者管理 (`/api/user`)**:
+    *   推測模組: `user_api.py`
+    *   可能功能: 獲取使用者個人資料、更新使用者資訊、管理使用者偏好設定。
+*   **API 金鑰管理 (`/api/keys`)**:
+    *   推測模組: `api_keys.py`
+    *   可能功能: 產生、列出、刪除使用者用於訪問第三方服務的 API 金鑰。
+
+---
+
+## 2. 圖片生成與處理 (Image Generation & Processing)
+
+核心功能，用於連接不同的 AI 模型並處理圖片。
+
+*   **Hugging Face 介面 (`/api/huggingface`)**:
+    *   推測模組: `huggingface_api.py`
+    *   可能功能: 透過 Hugging Face 的模型生成圖片。
+*   **Replicate 介面 (`/api/replicate`)**:
+    *   推測模組: `replicate_api.py`
+    *   可能功能: 透過 Replicate 的模型生成圖片。
+*   **本地 AI 模型 (`/api/local_ai`)**:
+    *   推測模組: `local_ai.py`
+    *   可能功能: 管理和調用在本地運行的 AI 模型。
+*   **圖片後處理 (`/api/image/process`)**:
+    *   推測模組: `image_processing.py`
+    *   可能功能: 提供圖片放大、濾鏡、格式轉換等後處理功能。
+
+---
+
+## 3. 核心服務 (Core Services)
+
+提供圖片儲存和管理等基礎支持。
+
+*   **圖片管理 (`/api/images`)**:
+    *   推測模組: `image_management.py`
+    *   可能功能: 管理使用者生成的圖片庫、讀取圖片中繼資料、刪除圖片。
+*   **雲端儲存 (`/api/storage`)**:
+    *   推測模組: `cloud_storage_api.py`
+    *   可能功能: 處理將圖片上傳到雲端儲存（如 S3, Google Cloud Storage）的邏輯。
+
+---
+
+## 4. 創意與工作流 (Creative & Workflow)
+
+提供輔助性的創意工具。
+
+*   **AI 助理 (`/api/assistant`)**:
+    *   推測模組: `ai_assistant.py`
+    *   可能功能: 提供提示詞 (Prompt) 優化、創意建議等功能。
+*   **創意工作流 (`/api/workflow`)**:
+    *   推測模組: `creative_workflow_api.py`
+    *   可能功能: 管理一系列的圖片生成和處理步驟，形成一個可重複使用的工作流程。
+
+---
+
+## 5. 運營與監控 (Operations & Monitoring)
+
+用於後台監控和數據分析。
+
+*   **系統監控 (`/api/monitoring`)**:
+    *   推測模組: `monitoring_api.py`
+    *   可能功能: 提供系統健康狀況檢查 (`/health`)、服務狀態、資源使用率等端點。
+*   **數據分析 (`/api/analytics`)**:
+    *   推測模組: `analytics_api.py`
+    *   可能功能: 獲取關於圖片生成數量、使用者活動、模型使用頻率等統計數據。 
